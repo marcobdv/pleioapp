@@ -26,10 +26,13 @@ namespace Pleioapp
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
-				return JsonConvert.DeserializeObject <List<Group>> (content);
+				System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
+
+				var list = JsonConvert.DeserializeObject <PaginatedList> (content);
+				return list.entities;
+			} else {
+				return null;
 			}
-			System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
-			return null;
 		}
 	}
 }
