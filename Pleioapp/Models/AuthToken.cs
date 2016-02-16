@@ -6,15 +6,15 @@ namespace Pleioapp
 	public class AuthToken
 	{
 		[JsonProperty(PropertyName="access_token")]
-		public string accessToken;
+		public string accessToken { get; set; }
 		[JsonProperty(PropertyName="expires_in")]
-		public string expiresIn;
+		public string expiresIn { get; set; }
 		[JsonProperty(PropertyName="token_type")]
-		public string tokenType;
+		public string tokenType { get; set; }
 		[JsonProperty(PropertyName="refresh_token")]
-		public string refreshToken;
+		public string refreshToken { get; set; }
 		[JsonProperty(PropertyName="scope")]
-		public string scope;
+		public string scope { get; set; }
 	}
 }
 

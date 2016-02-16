@@ -6,16 +6,20 @@ namespace Pleioapp
 {
 	public class App : Application
 	{
-		static RootPage _RootPage;
+		static MainPage RootPage;
 
 		public App ()
 		{
-			_RootPage = new RootPage ();
-			MainPage = _RootPage;
+			RootPage = new MainPage ();
+			MainPage = RootPage;
 
-			// @todo: only on login
-			if (!Properties.ContainsKey("AuthToken")) {
-				_RootPage.Navigation.PushModalAsync (new LoginPage ());
+			Properties.Add ("WebService", new WebService ());
+
+			var token = DependencyService.Get<ITokenStore> ().getToken();
+			if (token != null) {
+				Properties.Add ("AuthToken", token);
+			} else {
+				RootPage.Navigation.PushModalAsync (new LoginPage ());
 			}
 		}
 			
@@ -23,7 +27,8 @@ namespace Pleioapp
 		{
 			get {
 				return new Action (() => {
-					_RootPage.Navigation.PopModalAsync();
+					RootPage.leftMenu.GetGroups();
+					RootPage.Navigation.PopModalAsync();
 				});
 			}
 		}

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.FilePage" Title="Bestanden" Icon="icon-file.png">
+	<ContentPage.Padding>
+	    <OnPlatform x:TypeArguments="Thickness"
+	                iOS="0, 40, 0, 0"
+	                Android="0, 20, 0, 0"
+	                WinPhone="0, 20, 0, 0" />
+	</ContentPage.Padding>
+	<ContentPage.Content>
+		<Label Text="Bestanden" />
+	</ContentPage.Content>
+</ContentPage>
