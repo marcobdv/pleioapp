@@ -34,7 +34,7 @@ namespace Pleioapp
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
+				//System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
 
 				var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
 				return list.entities;
@@ -50,7 +50,7 @@ namespace Pleioapp
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("Get activities succesful: " + content);
+				//System.Diagnostics.Debug.WriteLine ("Get activities succesful: " + content);
 
 				var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
 				return list.entities;

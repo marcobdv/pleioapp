@@ -23,6 +23,7 @@ namespace Pleioapp
 
 		protected override async void OnAppearing()
 		{
+			//@todo: fix this, this refreshes on every menu load!
 			if (App.Current.Properties.ContainsKey("AuthToken")) {
 				await GetGroups ();
 			}

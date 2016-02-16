@@ -36,6 +36,9 @@ namespace Pleioapp
 		protected override void OnStart ()
 		{
 			// Handle when your app starts
+			var pushService = DependencyService.Get<IPushService> ();
+			pushService.Register ();
+
 		}
 
 		protected override void OnSleep ()
