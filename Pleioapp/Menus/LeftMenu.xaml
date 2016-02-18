@@ -10,7 +10,7 @@
 	<ListView x:Name="GroupsListView" BackgroundColor="Silver">
 		<ListView.ItemTemplate>
 			<DataTemplate>
-				<TextCell Text="{Binding name}" />
+				<TextCell Text="{Binding name}" Detail="{Binding activitiesUnreadCount}" />
 			</DataTemplate>
 		</ListView.ItemTemplate>
 	</ListView>

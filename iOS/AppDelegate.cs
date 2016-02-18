@@ -4,6 +4,7 @@ using System.Linq;
 
 using Foundation;
 using UIKit;
+using Xamarin;
 
 namespace Pleioapp.iOS
 {
@@ -14,9 +15,11 @@ namespace Pleioapp.iOS
 		{
 			global::Xamarin.Forms.Forms.Init ();
 
+			Insights.Initialize (Constants.InsightsKey);
+
 			// Code for starting up the Xamarin Test Cloud Agent
 			#if ENABLE_TEST_CLOUD
-			Xamarin.Calabash.Start();
+				Xamarin.Calabash.Start();
 			#endif
 
 			LoadApplication (new App ());
@@ -29,7 +32,7 @@ namespace Pleioapp.iOS
 			// Get current device token
 			var DeviceToken = deviceToken.Description;
 			if (!string.IsNullOrWhiteSpace(DeviceToken)) {
-				DeviceToken = DeviceToken.Trim('<').Trim('>');
+				DeviceToken = DeviceToken.Trim('<').Trim('>').Replace(" ", "");
 			}
 
 			// Get previous device token
@@ -39,16 +42,25 @@ namespace Pleioapp.iOS
 			if (string.IsNullOrEmpty(oldDeviceToken) || !oldDeviceToken.Equals(DeviceToken))
 			{
 				var service = new PushService ();
-				service.PublishRegistration (DeviceToken);
+				service.SaveToken (DeviceToken);
+				service.RegisterToken ();
 			}
-
-			// Save new device token 
-			NSUserDefaults.StandardUserDefaults.SetString(DeviceToken, "PushDeviceToken");
 		}
 
 		public override void FailedToRegisterForRemoteNotifications (UIApplication application, NSError error)
 		{
-			new UIAlertView ("Error registering push notifications", error.LocalizedDescription, null, "OK", null).Show ();
+			System.Diagnostics.Debug.WriteLine ("A problem occured during push notification registration " + error.LocalizedDescription);
+		}
+
+		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
+		{
+			var data = new Dictionary<string, string> ();
+			data.Add ("alert", userInfo ["aps"] ["alert"].ToString ());
+			data.Add ("badge", userInfo ["aps"] ["badge"].ToString ());
+			data.Add ("sound", userInfo ["aps"] ["sound"].ToString ());
+
+			var service = new PushService();
+			service.ProcessPushNotification(data);
 		}
 	}
 }

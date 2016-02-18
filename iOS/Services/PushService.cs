@@ -3,14 +3,15 @@ using UIKit;
 using Foundation;
 using Xamarin.Forms;
 using Pleioapp.iOS;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 [assembly: Dependency(typeof(PushService))]
 namespace Pleioapp.iOS
 {
 	public class PushService : IPushService
 	{
-		public void Register() {
-			System.Diagnostics.Debug.WriteLine ("Registering for push notifications");
+		public void RequestToken() {
 			if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0)) {
 				var pushSettings = UIUserNotificationSettings.GetSettingsForTypes (
 					UIUserNotificationType.Alert | UIUserNotificationType.Badge | UIUserNotificationType.Sound,
@@ -24,8 +25,28 @@ namespace Pleioapp.iOS
 			}
 		}
 
-		public void PublishRegistration(string DeviceToken) {
-			System.Diagnostics.Debug.WriteLine ("Request to publish registration " + DeviceToken);
+		public void SetBadgeNumber(int number) {
+			UIApplication.SharedApplication.ApplicationIconBadgeNumber = number;
+		}
+
+		public void SaveToken(string DeviceToken) {
+			NSUserDefaults.StandardUserDefaults.SetString(DeviceToken, "PushDeviceToken");
+		}
+
+		public string GetToken() {
+			return NSUserDefaults.StandardUserDefaults.StringForKey ("PushDeviceToken");
+		}
+
+		public Task<bool> RegisterToken()
+		{
+			var service = (WebService) App.Current.Properties ["WebService"];
+			return service.RegisterPush (GetToken (), "apns");
+		}
+
+		public void ProcessPushNotification(Dictionary <string, string> data)
+		{
+			System.Diagnostics.Debug.WriteLine ("Received a push notification " + data.ToString());
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_content");
 		}
 	}
 }

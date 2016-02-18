@@ -26,39 +26,99 @@ namespace Pleioapp
 
 			return _client;
 		}
-
+			
 		public async Task<List<Group>> GetGroups ()
 		{
-			var uri = new Uri (Constants.Url + "/api/groups/mine");
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			var uri = new Uri (Constants.Url + "api/groups/mine");
 
-			if (response.IsSuccessStatusCode) {
-				//System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-				var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
-				return list.entities;
-			} else {
-				return null;
+				if (response.IsSuccessStatusCode) {
+					//System.Diagnostics.Debug.WriteLine ("Get groups succesful: " + content);
+
+					var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				Xamarin.Insights.Report (e);
 			}
+
+			return null;
+		}
+
+		public async Task<bool> MarkGroupAsRead(Group group)
+		{
+			var uri = new Uri (Constants.Url + "api/groups/" + group.guid + "/activities/mark_read");
+
+			try {
+				var response = await getClient().PostAsync(uri, null);
+				var content = await response.Content.ReadAsStringAsync();
+
+				System.Diagnostics.Debug.WriteLine ("Marked group as read " + content);
+
+				if (response.IsSuccessStatusCode) {
+					return true;
+				}
+			} catch (Exception e) {
+				Xamarin.Insights.Report (e);
+			}
+
+			return false;
 		}
 
 		public async Task<List<Activity>> GetActivities (Group group)
 		{
-			var uri = new Uri (Constants.Url + "/api/groups/" + group.guid + "/activities");
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			var uri = new Uri (Constants.Url + "api/groups/" + group.guid + "/activities");
 
-			if (response.IsSuccessStatusCode) {
-				//System.Diagnostics.Debug.WriteLine ("Get activities succesful: " + content);
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-				var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
-				return list.entities;
-			} else {
-				return null;
+				if (response.IsSuccessStatusCode) {
+					//System.Diagnostics.Debug.WriteLine ("Get activities succesful: " + content);
+
+					var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				Xamarin.Insights.Report (e);
 			}
+
+			return null;
 		}
 
+
+		public async Task<bool> RegisterPush(string token, string service)
+		{
+			var uri = new Uri (Constants.Url + "api/users/me/register_push");
+
+			if (service != "apns" && service != "gcm") {
+				throw new Exception ("Invalid service type specified during push token registration.");
+			}
+
+			try {
+				var formContent = new FormUrlEncodedContent (new [] {
+					new KeyValuePair<string,string>("token", token),
+					new KeyValuePair<string,string>("service", service),
+				});
+
+				var response = await getClient().PostAsync(uri, formContent);
+				var content = await response.Content.ReadAsStringAsync();
+
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("Succefully registered push token (" + token + ") at webservice " + content);
+					return true;
+				} else {
+					System.Diagnostics.Debug.WriteLine ("Could not register push token at webservice " + content);
+				}
+			} catch (Exception e) {
+				Xamarin.Insights.Report (e);
+			}
+
+			return false;
+		}
 	}
 }
 

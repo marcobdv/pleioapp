@@ -33,6 +33,8 @@ namespace Pleioapp
 				store.saveToken (token);
 				App.Current.Properties ["AuthToken"] = token;
 				App.SuccesfulLoginAction.Invoke ();
+
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 			} else {
 				await DisplayAlert ("Login", "Kon niet inloggen, controleer gebruikersnaam en wachtwoord", "Ok");
 			}

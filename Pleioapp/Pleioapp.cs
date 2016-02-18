@@ -8,37 +8,57 @@ namespace Pleioapp
 	{
 		static MainPage RootPage;
 
+		WebService webService;
+		IPushService pushService;
+		AuthToken token;
+
 		public App ()
 		{
+			webService = new WebService ();
+			Properties.Add ("WebService", webService);
+
+			pushService = DependencyService.Get<IPushService> ();
+			Properties.Add ("PushService", pushService);
+
 			RootPage = new MainPage ();
 			MainPage = RootPage;
 
-			Properties.Add ("WebService", new WebService ());
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_content", async(sender) => {
+				await RootPage.leftMenu.GetGroups();
+			});
 
-			var token = DependencyService.Get<ITokenStore> ().getToken();
-			if (token != null) {
-				Properties.Add ("AuthToken", token);
-			} else {
-				RootPage.Navigation.PushModalAsync (new LoginPage ());
-			}
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
+				if (pushService.GetToken() == null) {
+					pushService.RequestToken();
+				} else {
+					await pushService.RegisterToken();
+				}
+					
+				await RootPage.leftMenu.GetGroups();
+			});				
 		}
 			
 		public static Action SuccesfulLoginAction
 		{
 			get {
 				return new Action (() => {
-					RootPage.leftMenu.GetGroups();
 					RootPage.Navigation.PopModalAsync();
 				});
 			}
 		}
 
-		protected override void OnStart ()
+		protected async override void OnStart ()
 		{
-			// Handle when your app starts
-			var pushService = DependencyService.Get<IPushService> ();
-			pushService.Register ();
+			token = DependencyService.Get<ITokenStore> ().getToken();
 
+			if (token == null) {
+				await RootPage.Navigation.PushModalAsync (new LoginPage ());
+			} else {
+				Properties.Add ("AuthToken", token);
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
+			}
+
+			pushService.SetBadgeNumber (0);
 		}
 
 		protected override void OnSleep ()
@@ -48,7 +68,7 @@ namespace Pleioapp
 
 		protected override void OnResume ()
 		{
-			// Handle when your app resumes
+			pushService.SetBadgeNumber (0);
 		}
 	}
 }

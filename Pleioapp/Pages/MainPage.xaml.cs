@@ -14,7 +14,9 @@ namespace Pleioapp
 		{
 			InitializeComponent ();
 
-			leftMenu.Menu.ItemSelected += (sender, e) =>  ViewGroup(e.SelectedItem as Group);
+			leftMenu.Menu.ItemSelected += (sender, e) =>  {
+				ViewGroup(e.SelectedItem as Group);
+			};
 
 			Master = leftMenu;
 			Detail = groupPage;

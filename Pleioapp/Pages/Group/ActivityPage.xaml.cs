@@ -22,6 +22,11 @@ namespace Pleioapp
 			foreach (Activity activity in await service.GetActivities (group)) {
 				activities.Add (activity);
 			}
+
+			if (group.activitiesUnreadCount > 0) {
+				group.MarkAsRead ();
+				service.MarkGroupAsRead (group);
+			}
 		}
 	}
 

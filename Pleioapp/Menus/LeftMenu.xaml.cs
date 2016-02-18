@@ -21,28 +21,15 @@ namespace Pleioapp
 			GroupsListView.ItemsSource = groups;
 		}
 
-		protected override async void OnAppearing()
-		{
-			//@todo: fix this, this refreshes on every menu load!
-			if (App.Current.Properties.ContainsKey("AuthToken")) {
-				await GetGroups ();
-			}
-		}
-
 		public async Task GetGroups() {
 			var service = (WebService) App.Current.Properties ["WebService"];
 
+			var webGroups = await service.GetGroups ();
 			groups.Clear ();
-			foreach (Group group in await service.GetGroups ()) {
+			foreach (Group group in webGroups) {
 				groups.Add (group);
 			}
 		}
-
-	}
-
-	public class MenuItem
-	{ 
-		
 	}
 }
 

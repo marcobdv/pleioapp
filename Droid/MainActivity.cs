@@ -7,6 +7,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using Xamarin;
 
 namespace Pleioapp.Droid
 {
@@ -18,6 +19,8 @@ namespace Pleioapp.Droid
 			base.OnCreate (bundle);
 
 			global::Xamarin.Forms.Forms.Init (this, bundle);
+
+			Insights.Initialize (Constants.InsightsKey, this.ApplicationContext);
 
 			LoadApplication (new App ());
 		}
