@@ -2,25 +2,16 @@
 using System.Collections.Generic;
 
 using Xamarin.Forms;
+using System.Globalization;
+using System.Collections;
 
 namespace Pleioapp
 {
 	public partial class LoginPage : ContentPage
 	{
-		ITokenStore store;
-
-
 		public LoginPage ()
 		{
 			InitializeComponent ();
-
-			store = DependencyService.Get<ITokenStore> ();
-
-			var token = store.getToken ();
-			if (token != null) {
-				App.Current.Properties ["AuthToken"] = token;
-				App.SuccesfulLoginAction.Invoke ();
-			}
 		}
 
 		async void OnLogin(object sender, EventArgs e)
@@ -30,9 +21,10 @@ namespace Pleioapp
 
 			if (token != null) {
 				var store = DependencyService.Get<ITokenStore> ();
+				var app = (App) App.Current;
+
 				store.saveToken (token);
-				App.Current.Properties ["AuthToken"] = token;
-				App.SuccesfulLoginAction.Invoke ();
+				app.authToken = token;
 
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 			} else {

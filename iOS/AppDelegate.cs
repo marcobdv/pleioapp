@@ -54,13 +54,11 @@ namespace Pleioapp.iOS
 
 		public override void ReceivedRemoteNotification(UIApplication application, NSDictionary userInfo)
 		{
+			// @todo: convert NSDictionary to normal Dictionary and pass variables
 			var data = new Dictionary<string, string> ();
-			data.Add ("alert", userInfo ["aps"] ["alert"].ToString ());
-			data.Add ("badge", userInfo ["aps"] ["badge"].ToString ());
-			data.Add ("sound", userInfo ["aps"] ["sound"].ToString ());
 
-			var service = new PushService();
-			service.ProcessPushNotification(data);
+			var app = (App) App.Current;
+			app.pushService.ProcessPushNotification(data);
 		}
 	}
 }

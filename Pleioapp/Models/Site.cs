@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Pleioapp
 {
-	public class Group : INotifyPropertyChanged
+	public class Site : INotifyPropertyChanged
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -22,7 +22,7 @@ namespace Pleioapp
 		public string description { get; set; }
 
 		[JsonProperty]
-		public string membership { get; set; }
+		public string url { get; set; }
 
 		[JsonProperty(PropertyName="activities_unread_count")]
 		public int activitiesUnreadCount { get; set; }
@@ -30,12 +30,6 @@ namespace Pleioapp
 		public void MarkAsRead() {
 			activitiesUnreadCount = 0;
 			OnPropertyChanged ("activitiesUnreadCount");
-		}
-
-		public bool hasActivitiesUnread { 
-			get {
-				return activitiesUnreadCount != 0;
-			}
 		}
 
 		protected virtual void OnPropertyChanged(string propertyName)

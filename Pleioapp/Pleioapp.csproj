@@ -10,8 +10,6 @@
     <AssemblyName>Pleioapp</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Profile78</TargetFrameworkProfile>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +68,8 @@
     <Compile Include="Models\PaginatedActivityList.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Services\IPushService.cs" />
+    <Compile Include="Models\Site.cs" />
+    <Compile Include="Models\PaginatedSiteList.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Import Project="..\packages\Xamarin.Forms.2.0.1.6505\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets" Condition="Exists('..\packages\Xamarin.Forms.2.0.1.6505\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets')" />
@@ -112,6 +112,7 @@
     <Folder Include="Menus\" />
     <Folder Include="Pages\Group\" />
     <Folder Include="Resources\" />
+    <Folder Include="Library\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Pages\Group\ActivityPage.xaml">

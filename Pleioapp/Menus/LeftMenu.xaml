@@ -7,12 +7,23 @@
 	                WinPhone="0, 20, 0, 0" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
-	<ListView x:Name="GroupsListView" BackgroundColor="Silver">
-		<ListView.ItemTemplate>
-			<DataTemplate>
-				<TextCell Text="{Binding name}" Detail="{Binding activitiesUnreadCount}" />
-			</DataTemplate>
-		</ListView.ItemTemplate>
-	</ListView>
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+			<Picker x:Name="SitePicker" BackgroundColor="Silver" />
+			<ListView x:Name="GroupsListView" BackgroundColor="Silver">
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<StackLayout Orientation="Horizontal">
+								<Label Text="{Binding name}" />
+								<Label Text="{Binding activitiesUnreadCount}" IsVisible="{Binding hasActivitiesUnread}" />
+							</StackLayout>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

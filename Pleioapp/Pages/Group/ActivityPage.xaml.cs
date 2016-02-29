@@ -18,14 +18,17 @@ namespace Pleioapp
 		public async void setGroup(Group group)
 		{
 			activities.Clear ();
-			var service = (WebService) App.Current.Properties ["WebService"];
+
+			var app = (App)App.Current;
+			var service = app.webService;
+
 			foreach (Activity activity in await service.GetActivities (group)) {
 				activities.Add (activity);
 			}
 
 			if (group.activitiesUnreadCount > 0) {
 				group.MarkAsRead ();
-				service.MarkGroupAsRead (group);
+				await service.MarkGroupAsRead (group);
 			}
 		}
 	}
