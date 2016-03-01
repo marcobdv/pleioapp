@@ -61,7 +61,7 @@ namespace Pleioapp
 
 		public async Task<List<Group>> GetGroups ()
 		{
-			var uri = new Uri (currentSite.url + "api/groups/mine");
+			var uri = new Uri (currentSite.url + "api/groups/mine?limit=100");
 
 			try {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of groups...");
