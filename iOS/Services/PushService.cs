@@ -39,7 +39,8 @@ namespace Pleioapp.iOS
 
 		public Task<bool> RegisterToken()
 		{
-			var service = (WebService) App.Current.Properties ["WebService"];
+			var app = (App)App.Current;
+			var service = app.webService;
 			var deviceId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.AsString ();
 			return service.RegisterPush (deviceId, GetToken (), "apns");
 		}

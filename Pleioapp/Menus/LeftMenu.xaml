@@ -16,9 +16,9 @@
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell>
-							<StackLayout Orientation="Horizontal">
+							<StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
 								<Label Text="{Binding name}" />
-								<Label Text="{Binding activitiesUnreadCount}" IsVisible="{Binding hasActivitiesUnread}" />
+								<Label Text="{Binding activitiesUnreadCount}" IsVisible="{Binding hasActivitiesUnread}" TextColor="Red" />
 							</StackLayout>
 						</ViewCell>
 					</DataTemplate>

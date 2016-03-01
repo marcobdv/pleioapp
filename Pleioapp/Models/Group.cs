@@ -30,6 +30,7 @@ namespace Pleioapp
 		public void MarkAsRead() {
 			activitiesUnreadCount = 0;
 			OnPropertyChanged ("activitiesUnreadCount");
+			OnPropertyChanged ("hasActivitiesUnread");
 		}
 
 		public bool hasActivitiesUnread { 

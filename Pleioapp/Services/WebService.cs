@@ -152,10 +152,10 @@ namespace Pleioapp
 				var content = await response.Content.ReadAsStringAsync();
 
 				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("Succefully registered push token (" + token + ") at webservice " + content);
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Succefully registered push token (" + token + ") at webservice " + content);
 					return true;
 				} else {
-					System.Diagnostics.Debug.WriteLine ("Could not register push token at webservice " + content);
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Could not register push token at webservice " + content);
 
 					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
 						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");

@@ -38,6 +38,14 @@ namespace Pleioapp
 				await RootPage.leftMenu.GetGroups();
 			});
 
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_push", async(sender) => {
+				if (pushService.GetToken() == null) {
+					pushService.RequestToken();
+				} else {
+					await pushService.RegisterToken();
+				}
+			});
+
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "trigger_login", async(sender) => {
 				await RootPage.Navigation.PushModalAsync (new LoginPage ());
 			});
@@ -45,12 +53,7 @@ namespace Pleioapp
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
 				await RootPage.Navigation.PopModalAsync();
 
-				if (pushService.GetToken() == null) {
-					pushService.RequestToken();
-				} else {
-					await pushService.RegisterToken();
-				}
-
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_sites");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
 			});	
@@ -65,7 +68,7 @@ namespace Pleioapp
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "trigger_login");
 			} else {
 				authToken = token;
-
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_sites");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
 			}
