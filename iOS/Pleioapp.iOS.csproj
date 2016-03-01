@@ -109,9 +109,22 @@
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\Contents.json" />
-  </ItemGroup>
-  <ItemGroup>
-    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-180.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-120.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-80.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-114.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-57.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-29.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-58.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-40.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-50.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-100.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-72.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-144.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-76.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-152.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-167.png" />
+    <ImageAsset Include="Resources\Images.xcassets\AppIcons.appiconset\app-icon-87.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
@@ -148,5 +161,8 @@
     <BundleResource Include="Resources\icon-profile.png" />
     <BundleResource Include="Resources\icon-activity.png" />
     <BundleResource Include="Resources\icon-event.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
   </ItemGroup>
 </Project>
