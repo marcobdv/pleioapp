@@ -7,12 +7,9 @@ namespace Pleioapp
 {
 	public partial class GroupPage : TabbedPage
 	{
-		Group currentGroup;
-
 		ActivityPage activityPage;
 		EventPage eventPage;
-		FilePage filePage;
-		ProfilePage profilePage;
+		MemberPage memberPage;
 
 		public GroupPage ()
 		{
@@ -20,23 +17,18 @@ namespace Pleioapp
 
 			activityPage = new ActivityPage ();
 			eventPage = new EventPage ();
-			filePage = new FilePage ();
-			profilePage = new ProfilePage ();
+			memberPage = new MemberPage ();
 
 			Children.Add (activityPage);
 			Children.Add (eventPage);
-			Children.Add (filePage);
-			Children.Add (profilePage);
+			Children.Add (memberPage);
 		}
 
 		public void setGroup(Group group)
 		{
-			currentGroup = group;
-
 			activityPage.setGroup (group);
 			eventPage.setGroup (group);
-			filePage.setGroup (group);
-			profilePage.setGroup (group);
+			memberPage.setGroup (group);
 		}
 	}
 }

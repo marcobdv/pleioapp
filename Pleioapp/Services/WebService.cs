@@ -84,7 +84,7 @@ namespace Pleioapp
 
 			return new List<Group>();
 		}
-
+			
 		public async Task<bool> MarkGroupAsRead(Group group)
 		{
 			var uri = new Uri (currentSite.url + "api/groups/" + group.guid + "/activities/mark_read");
@@ -132,6 +132,53 @@ namespace Pleioapp
 			return new List<Activity>();
 		}
 
+		public async Task<List<Event>> GetEvents (Group group)
+		{
+			var uri = new Uri (currentSite.url + "api/groups/" + group.guid + "/events");
+
+			try {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving events... ");
+
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
+
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
+
+					var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
+			}
+
+			return new List<Event>();
+		}
+
+		public async Task<List<User>> GetMembers (Group group)
+		{
+			var uri = new Uri (currentSite.url + "api/groups/" + group.guid + "/members?limit=100");
+
+			try {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving members... ");
+
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
+
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
+
+					var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
+			}
+
+			return new List<User>();
+		}
 
 		public async Task<bool> RegisterPush(string deviceId, string token, string service)
 		{
@@ -167,6 +214,24 @@ namespace Pleioapp
 			}
 
 			return false;
+		}
+
+		public async Task<SSOToken> GenerateToken()
+		{
+			try {
+				var uri = new Uri (currentSite.url + "api/users/me/generate_token");
+				var response = await getClient ().PostAsync (uri, null);
+				var content = await response.Content.ReadAsStringAsync();
+
+				if (response.IsSuccessStatusCode) {
+					return JsonConvert.DeserializeObject <SSOToken> (content);
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
+			}
+
+			return null;
 		}
 	}
 }

@@ -37,7 +37,6 @@ namespace Pleioapp
 				}
 
 				app.currentSite = indexToSite [selectedIndex];
-				System.Diagnostics.Debug.WriteLine ("Selected site " + app.currentSite.name);
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
 			};
 		}

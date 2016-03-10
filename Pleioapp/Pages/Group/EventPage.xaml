@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.EventPage" Title="Evenementen" Icon="icon-event.png">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.EventPage" Title="Kalender" Icon="icon-event.png">
 	<ContentPage.Padding>
 	    <OnPlatform x:TypeArguments="Thickness"
 	                iOS="0, 40, 0, 0"
@@ -7,6 +7,24 @@
 	                WinPhone="0, 20, 0, 0" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
-		<Label Text="Evenementen" />
+		<ListView x:Name="EventListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
+			<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+	                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+								<Image Source="{Binding subject.iconUrl}" />
+								<StackLayout Orientation="Vertical" Spacing="2">
+	                                <Label Text="{Binding title}" />
+	                                <StackLayout Orientation="Horizontal" Spacing="2">
+										<Label Text="{Binding startTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" />
+										<Label Text=" tot " FontSize="Small" IsVisible="{Binding hasEndTime}" />
+										<Label Text="{Binding endTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" IsVisible="{Binding hasEndTime}" />
+									</StackLayout>
+	                            </StackLayout>
+	                        </StackLayout>
+						</ViewCell>
+					</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
 	</ContentPage.Content>
 </ContentPage>

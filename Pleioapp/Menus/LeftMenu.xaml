@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LeftMenu" Title="Left Menu" BackgroundColor="Silver">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LeftMenu" Title="Left Menu" BackgroundColor="#f8f8f8">
 	<ContentPage.Padding>
 	    <OnPlatform x:TypeArguments="Thickness"
 	                iOS="0, 40, 0, 0"
@@ -11,8 +11,8 @@
                      HorizontalOptions="FillAndExpand"
                      Orientation="Vertical"
                      Spacing="15">
-			<Picker x:Name="SitePicker" BackgroundColor="Silver" />
-			<ListView x:Name="GroupsListView" BackgroundColor="Silver">
+			<Picker x:Name="SitePicker" BackgroundColor="#f8f8f8" />
+			<ListView x:Name="GroupsListView" BackgroundColor="#f8f8f8" SeparatorColor="#dbdbdb">
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell>

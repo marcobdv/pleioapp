@@ -14,6 +14,7 @@ namespace Pleioapp
 
 		public WebService webService;
 		public IPushService pushService;
+		public ISSOService ssoService;
 		public LoginService loginService;
 
 		public App ()
@@ -26,6 +27,7 @@ namespace Pleioapp
 			webService = new WebService ();
 			pushService = DependencyService.Get<IPushService> ();
 			loginService = new LoginService ();
+			ssoService = DependencyService.Get<ISSOService> ();
 
 			RootPage = new MainPage ();
 			MainPage = RootPage;
@@ -100,7 +102,6 @@ namespace Pleioapp
 		protected override void OnResume ()
 		{
 			pushService.SetBadgeNumber (0);
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
 		}
 	}
 }

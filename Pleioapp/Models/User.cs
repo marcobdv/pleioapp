@@ -11,6 +11,9 @@ namespace Pleioapp
 		[JsonProperty]
 		public string name { get; set; }
 
+		[JsonProperty]
+		public string url { get; set; }
+
 		[JsonProperty(PropertyName="icon_url")]
 		public string iconUrl { get; set; }
 	}

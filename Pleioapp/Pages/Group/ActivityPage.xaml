@@ -7,11 +7,22 @@
 	                WinPhone="0, 20, 0, 0" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
-		<ListView x:Name="ActivityListView">
+		<ListView x:Name="ActivityListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
 			<ListView.ItemTemplate>
-				<DataTemplate>
-					<ImageCell ImageSource="{Binding subject.iconUrl}" Text="{Binding humanReadableActionType}" Detail="{Binding timeCreated}" />
-				</DataTemplate>
+					<DataTemplate>
+						<ViewCell>
+	                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+								<Image Source="{Binding subject.iconUrl}" />
+								<StackLayout Orientation="Vertical" Spacing="2">
+	                                <Label Text="{Binding humanReadableActionType}" />
+	                                <ContentView Padding="10, 2, 0, 2">
+		                                <Label Text="{Binding targetObject.title}" FontSize="Small" />
+		                            </ContentView>
+									<Label Text="{Binding timeCreated, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Micro" FontAttributes="Italic" TextColor="#cecece" />
+	                            </StackLayout>
+	                        </StackLayout>
+						</ViewCell>
+					</DataTemplate>
 			</ListView.ItemTemplate>
 		</ListView>
 	</ContentPage.Content>
