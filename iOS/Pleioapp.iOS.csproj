@@ -163,6 +163,9 @@
     <BundleResource Include="Resources\icon-profile.png" />
     <BundleResource Include="Resources\icon-activity.png" />
     <BundleResource Include="Resources\icon-event.png" />
+    <BundleResource Include="Resources\hamburger.png" />
+    <BundleResource Include="Resources\hamburger%402x.png" />
+    <BundleResource Include="Resources\hamburger%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />

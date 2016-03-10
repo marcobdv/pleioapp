@@ -19,7 +19,9 @@ namespace Pleioapp
 			};
 
 			Master = leftMenu;
-			Detail = groupPage;
+
+			var navigation = new NavigationPage (groupPage);
+			Detail = new NavigationPage(groupPage);
 		}
 
 		void ViewGroup (Group group)

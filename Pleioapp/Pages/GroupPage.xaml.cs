@@ -26,6 +26,7 @@ namespace Pleioapp
 
 		public void setGroup(Group group)
 		{
+			BindingContext = group;
 			activityPage.setGroup (group);
 			eventPage.setGroup (group);
 			memberPage.setGroup (group);
