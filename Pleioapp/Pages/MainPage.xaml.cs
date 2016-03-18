@@ -19,9 +19,12 @@ namespace Pleioapp
 			};
 
 			Master = leftMenu;
-
-			var navigation = new NavigationPage (groupPage);
+			leftMenu.IsVisible = true;
 			Detail = new NavigationPage(groupPage);
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "logout", async(sender) => {
+				groupPage.setGroup(null);
+			});
 		}
 
 		void ViewGroup (Group group)

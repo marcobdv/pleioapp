@@ -11,6 +11,7 @@ namespace Pleioapp
 		ObservableCollection<Event> events = new ObservableCollection<Event>();
 		App app = (App) App.Current;
 		Event SelectedItem = null;
+		Group Group;
 
 		public EventPage ()
 		{
@@ -25,18 +26,50 @@ namespace Pleioapp
 
 				SelectedItem = (Event) EventListView.SelectedItem;
 			};
+
+			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
+				Command = new Command (() => {
+					Reload();
+				}),
+				NumberOfTapsRequired = 1
+			});
 		}
 
-		public async void setGroup(Group group)
+		public async void Reload()
 		{
+			CouldNotLoad.IsVisible = false;
+			NoItems.IsVisible = false;
 			events.Clear ();
 
 			var app = (App)App.Current;
 			var service = app.webService;
 
-			foreach (Event e in await service.GetEvents (group)) {
-				events.Add (e);
+			try {
+				var webEvents = await service.GetEvents (Group);
+
+				foreach (Event e in webEvents) {
+					events.Add (e);
+				}
+
+				if (events.Count == 0) {
+					NoItems.IsVisible = true;
+				}
+			} catch (Exception e) {
+				CouldNotLoad.IsVisible = true;
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
 			}
+		}
+
+		public void setGroup(Group group)
+		{
+			Group = group;
+			if (group == null) {
+				events.Clear ();
+				return;
+			}
+
+			Reload ();
 		}
 
 	}

@@ -1,17 +1,37 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.MemberPage" Title="Groepsleden" Icon="icon-profile.png">
 	<ContentPage.Content>
-		<ListView x:Name="MemberListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
-			<ListView.ItemTemplate>
-					<DataTemplate>
-						<ViewCell>
-	                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
-								<Image Source="{Binding iconUrl}" />
-	                            <Label Text="{Binding name}" />
-	                        </StackLayout>
-						</ViewCell>
-					</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+			<ContentView x:Name="CouldNotLoad" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Kan de leden niet laden.
+Tik hier om opnieuw te proberen.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ContentView x:Name="NoItems" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Er zijn geen leden.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ListView x:Name="MemberListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
+				<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+		                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+									<Image Source="{Binding iconUrl}" />
+		                            <Label Text="{Binding name}" />
+		                        </StackLayout>
+							</ViewCell>
+						</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

@@ -12,6 +12,21 @@
                      Orientation="Vertical"
                      Spacing="15">
 			<Picker x:Name="SitePicker" BackgroundColor="#f8f8f8" />
+
+			<ContentView x:Name="ActivityIndicator" IsVisible="false">
+				<ActivityIndicator IsRunning="true" />
+			</ContentView>
+
+			<Label x:Name="CouldNotLoad" 
+				TextColor="Gray" 
+				HorizontalTextAlignment="Center"
+				IsVisible="false"
+			>
+			<Label.Text>
+				Kan de groep niet laden.
+Tik om het opnieuw te proberen.
+			</Label.Text>
+			</Label>
 			<ListView x:Name="GroupsListView" BackgroundColor="#f8f8f8" SeparatorColor="#dbdbdb">
 				<ListView.ItemTemplate>
 					<DataTemplate>
@@ -24,6 +39,7 @@
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
+			<Button x:Name="LogoutButton" Text="Uitloggen" />
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

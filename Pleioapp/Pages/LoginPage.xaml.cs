@@ -12,6 +12,22 @@ namespace Pleioapp
 		public LoginPage ()
 		{
 			InitializeComponent ();
+			var browserService = DependencyService.Get<IBrowserService> ();
+
+			ForgotPassword.GestureRecognizers.Add (new TapGestureRecognizer {
+				Command = new Command (() => {
+					browserService.OpenUrl("https://www.pleio.nl/forgotpassword");
+				}),
+				NumberOfTapsRequired = 1
+			});
+
+			RegisterAccount.GestureRecognizers.Add (new TapGestureRecognizer {
+				Command = new Command (() => {
+					browserService.OpenUrl("https://www.pleio.nl/register");
+				}),
+				NumberOfTapsRequired = 1
+			});
+
 		}
 
 		async void OnLogin(object sender, EventArgs e)
@@ -28,7 +44,7 @@ namespace Pleioapp
 
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 			} else {
-				await DisplayAlert ("Login", "Kon niet inloggen, controleer gebruikersnaam en wachtwoord", "Ok");
+				await DisplayAlert ("Login", "Kon niet inloggen, controleer je gebruikersnaam en wachtwoord.", "Ok");
 			}
 		}
 	}

@@ -2,18 +2,32 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LoginPage">
 	<ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
-                    iOS="20, 40, 20, 20"
-                    Android="20, 20, 20, 20"
-                    WinPhone="20, 20, 20, 20" />
+                    iOS="20, 100, 20, 20"
+                    Android="20, 80, 20, 20"
+                    WinPhone="20, 80, 20, 20" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand"
                      HorizontalOptions="FillAndExpand"
                      Orientation="Vertical"
-                     Spacing="15">
-			<Entry x:Name="username" Placeholder="E-mailadres" Keyboard="Email" />
-			<Entry x:Name="password" Placeholder="Wachtwoord" IsPassword="true" />
-			<Button x:Name="loginButton" Text="Inloggen" Clicked="OnLogin" />
+                     Spacing="40"
+                     >
+            <Label HorizontalTextAlignment="Center" FontSize="Large">
+	            <Label.Text>Aanmelden op Pleio</Label.Text>
+            </Label>
+            <StackLayout Spacing="15">
+				<Entry x:Name="username" Placeholder="E-mailadres" Keyboard="Email" />
+				<Entry x:Name="password" Placeholder="Wachtwoord" IsPassword="true" />
+				<Button x:Name="loginButton" Text="Aanmelden" Clicked="OnLogin" />
+			</StackLayout>
+			<StackLayout Spacing="30" Orientation="Horizontal" HorizontalOptions="Center">
+				<Label x:Name="RegisterAccount" FontSize="Small">
+					<Label.Text>Account registreren</Label.Text>
+				</Label>
+				<Label x:Name="ForgotPassword" FontSize="Small">
+					<Label.Text>Wachtwoord vergeten</Label.Text>
+				</Label>
+			</StackLayout>
 		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

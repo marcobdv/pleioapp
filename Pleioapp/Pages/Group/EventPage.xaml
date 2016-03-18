@@ -1,24 +1,44 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.EventPage" Title="Kalender" Icon="icon-event.png">
 	<ContentPage.Content>
-		<ListView x:Name="EventListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
-			<ListView.ItemTemplate>
-					<DataTemplate>
-						<ViewCell>
-	                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
-								<Image Source="{Binding subject.iconUrl}" />
-								<StackLayout Orientation="Vertical" Spacing="2">
-	                                <Label Text="{Binding title}" />
-	                                <StackLayout Orientation="Horizontal" Spacing="2">
-										<Label Text="{Binding startTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" />
-										<Label Text=" tot " FontSize="Small" IsVisible="{Binding hasEndTime}" />
-										<Label Text="{Binding endTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" IsVisible="{Binding hasEndTime}" />
-									</StackLayout>
-	                            </StackLayout>
-	                        </StackLayout>
-						</ViewCell>
-					</DataTemplate>
-			</ListView.ItemTemplate>
-		</ListView>
+        <StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+			<ContentView x:Name="CouldNotLoad" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Kan de kalender niet laden.
+Tik hier om opnieuw te proberen.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ContentView x:Name="NoItems" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Er zijn geen kalenderitems.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ListView x:Name="EventListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
+				<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+		                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+									<Image Source="{Binding subject.iconUrl}" />
+									<StackLayout Orientation="Vertical" Spacing="2">
+		                                <Label Text="{Binding title}" />
+		                                <StackLayout Orientation="Horizontal" Spacing="2">
+											<Label Text="{Binding startTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" />
+											<Label Text=" tot " FontSize="Small" IsVisible="{Binding hasEndTime}" />
+											<Label Text="{Binding endTime, StringFormat='{0:dd-MM-yyyy HH\\:mm}'}" FontSize="Small" IsVisible="{Binding hasEndTime}" />
+										</StackLayout>
+		                            </StackLayout>
+		                        </StackLayout>
+							</ViewCell>
+						</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
 	</ContentPage.Content>
 </ContentPage>

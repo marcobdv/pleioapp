@@ -14,16 +14,17 @@ namespace Pleioapp.iOS
 		bool Loading = false;
 		double TokenExpiry = 0;
 		double LoginExpiry = 0;
+		App App;
 
 		public SSOService() {
-			var app = (App) App.Current;
-			WebService = app.webService;
+			App = (App) App.Current;
+			WebService = App.webService;
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App, "login_succesful", async(sender) => {
 				await LoadToken();
 			});
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_groups", async(sender) => {
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App, "refresh_groups", async(sender) => {
 				await LoadToken ();
 			});
 		}
@@ -55,8 +56,7 @@ namespace Pleioapp.iOS
 			}
 
 			if (LoginToken != null) {
-				loadUrl = Constants.Url + "api/users/me/login_token?user_guid=" + LoginToken.userGuid + "&token=" + LoginToken.token + "&redirect_url=" + Url;
-
+				loadUrl = App.currentSite.url + "api/users/me/login_token?user_guid=" + LoginToken.userGuid + "&token=" + LoginToken.token + "&redirect_url=" + Url;
 				LoginToken = null;
 				LoginExpiry = UnixTimestamp () + 60 * 60;
 			} else {
