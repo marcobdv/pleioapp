@@ -29,7 +29,9 @@ namespace Pleioapp
 					case "create":
 						return subject.name + " heeft een " + targetObject.humanReadableType + " toegevoegd.";
 					case "comment":
-						return subject.name + " heeft een reactie toegevoegd op " + targetObject.title + ".";
+						return subject.name + " heeft een reactie toegevoegd.";
+					case "reply":
+						return subject.name + " heeft een reactie toegevoegd.";
 					default:
 						return subject.name + " heeft " + actionType + " gedaan.";
 				}
