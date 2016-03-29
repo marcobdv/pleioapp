@@ -28,8 +28,9 @@ namespace Pleioapp
 			currentSite = mainSite;
 
 			webService = new WebService ();
-			pushService = DependencyService.Get<IPushService> ();
 			loginService = new LoginService ();
+
+			pushService = DependencyService.Get<IPushService> ();
 			ssoService = DependencyService.Get<ISSOService> ();
 
 			RootPage = new MainPage ();

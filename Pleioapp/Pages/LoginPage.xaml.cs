@@ -43,6 +43,7 @@ namespace Pleioapp
 
 				app.authToken = token;
 				app.currentSite = app.mainSite;
+				app.webService = new WebService ();
 
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push_token");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
