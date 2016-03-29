@@ -35,12 +35,12 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>CFBundleShortVersionString</key>
-	<string>0.2</string>
+	<string>0.4</string>
 	<key>XSAppIconAssets</key>
 	<string>Resources/Images.xcassets/AppIcons.appiconset</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>CFBundleVersion</key>
-	<string>2</string>
+	<string>3</string>
 </dict>
 </plist>

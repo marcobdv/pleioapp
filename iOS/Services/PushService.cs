@@ -45,10 +45,19 @@ namespace Pleioapp.iOS
 			return service.RegisterPush (deviceId, GetToken (), "apns");
 		}
 
+		public Task<bool> DeregisterToken()
+		{
+			var app = (App)App.Current;
+			var service = app.webService;
+			var deviceId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.AsString ();
+			return service.DeregisterPush (deviceId, "apns");
+
+		}
+			
 		public void ProcessPushNotification(Dictionary <string, string> data)
 		{
 			System.Diagnostics.Debug.WriteLine ("Received a push notification " + data.ToString());
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 		}
 	}
 }

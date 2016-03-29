@@ -40,9 +40,14 @@ namespace Pleioapp
 				var app = (App) App.Current;
 
 				store.saveToken (token);
-				app.authToken = token;
 
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
+				app.authToken = token;
+				app.currentSite = app.mainSite;
+
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push_token");
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
+
+				await app.MainPage.Navigation.PopModalAsync ();
 			} else {
 				await DisplayAlert ("Login", "Kon niet inloggen, controleer je gebruikersnaam en wachtwoord.", "Ok");
 			}

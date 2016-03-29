@@ -12,6 +12,7 @@ namespace Pleioapp
 		void ProcessPushNotification (Dictionary <string, string> data);
 		string GetToken();
 		Task<bool> RegisterToken();
+		Task<bool> DeregisterToken();
 	}
 
 }

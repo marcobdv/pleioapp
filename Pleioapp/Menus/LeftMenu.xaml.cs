@@ -27,14 +27,18 @@ namespace Pleioapp
 			SitePicker.Items.Add (app.mainSite.name);
 			SitePicker.SelectedIndex = 0;
 
-			SitePicker.SelectedIndexChanged += (sender, args) => {
+			SitePicker.SelectedIndexChanged += async(sender, args) => {
 				if (SitePicker.SelectedIndex != -1) {
 					app.currentSite = indexToSite [SitePicker.SelectedIndex];
-					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
+					await GetGroups();
 				}
-
 			};
 
+			Menu.ItemSelected += (sender, e) =>  {
+				app.currentGroup = e.SelectedItem as Group;
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
+			};
+				
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command (async () => {
 					await GetGroups();
@@ -45,22 +49,38 @@ namespace Pleioapp
 			LogoutButton.Clicked += (s, e) => {
 				OnLogout();
 			};
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_menu", async(sender) => {
+				GetSites();
+				GetGroups();
+			});
 		}
 
-		public void OnLogout() {
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "logout");
+		public async void OnLogout() {
+			await app.pushService.DeregisterToken ();
+
+			app.currentSite = null;
+			app.currentGroup = null;
+			app.authToken = null;
 
 			var store = DependencyService.Get<ITokenStore> ();
 			store.clearTokens ();
 
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "trigger_login");
+			var service = app.webService;
+
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login");
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 		}
 
 		public async Task GetGroups() {
+			if (app.currentSite == null) {
+				groups.Clear ();
+				return;
+			}
+
 			CouldNotLoad.IsVisible = false;
 			ActivityIndicator.IsVisible = true;
 
-			var app = (App)App.Current;
 			var service = app.webService;
 
 			try {
@@ -79,17 +99,18 @@ namespace Pleioapp
 		}
 
 		public async Task GetSites() {
-			var app = (App)App.Current;
-			var service = app.webService;
-
-			var webSites = await service.GetSites ();
-
 			for (int i = 1; i <= (SitePicker.Items.Count - 1); i++) {
 				SitePicker.Items.RemoveAt (i); 
 				indexToSite.Remove (i);
 			}
-				
+
+			if (app.authToken == null) {
+				return;
+			}
+
 			int j = 1;
+			var service = app.webService;
+			var webSites = await service.GetSites ();
 			foreach (Site site in webSites) {
 				SitePicker.Items.Add (site.name);
 				indexToSite.Add(j, site);

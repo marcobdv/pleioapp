@@ -7,15 +7,18 @@ namespace Pleioapp
 {
 	public class App : Application
 	{
-		static MainPage RootPage;
-		public Site currentSite;
+		public MainPage RootPage;
 		public Site mainSite;
+		public Site currentSite;
+		public Group currentGroup;
 		public AuthToken authToken;
 
 		public WebService webService;
 		public IPushService pushService;
 		public ISSOService ssoService;
 		public LoginService loginService;
+
+		private bool isRefreshingToken = false;
 
 		public App ()
 		{
@@ -32,66 +35,75 @@ namespace Pleioapp
 			RootPage = new MainPage ();
 			MainPage = RootPage;
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_sites", async(sender) => {
-				await RootPage.leftMenu.GetSites();
-			});
-
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_groups", async(sender) => {
-				await RootPage.leftMenu.GetGroups();
-			});
-
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_push", async(sender) => {
-				if (pushService.GetToken() == null) {
-					pushService.RequestToken();
-				} else {
-					await pushService.RegisterToken();
-				}
-			});
-
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "trigger_login", async(sender) => {
-				await RootPage.Navigation.PushModalAsync (new LoginPage ());
-			});
-
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
-				await RootPage.Navigation.PopModalAsync();
-
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_sites");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
-			});	
+			LoadAccessToken ();
+			pushService.SetBadgeNumber (0);
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_token", async(sender) => {
 				await RefreshToken();
 			});
 
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_push_token", async(sender) => {
+				RefreshPushToken();
+			});
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login", async(sender) => {
+				ShowLogin();
+			});
+		}
+			
+		private void LoadAccessToken()
+		{
 			var token = DependencyService.Get<ITokenStore> ().getToken();
 
-			if (token == null) {
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "trigger_login");
-			} else {
+			if (token != null) {
 				authToken = token;
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_sites");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_groups");
+				RefreshPushToken ();
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
+			} else {
+				ShowLogin ();
 			}
+		}
 
-			pushService.SetBadgeNumber (0);
+		private async void RefreshPushToken()
+		{
+			if (pushService.GetToken() == null) {
+				pushService.RequestToken();
+			} else {
+				await pushService.RegisterToken();
+			}
+		}
+
+		private async void ShowLogin()
+		{
+			await RootPage.Navigation.PushModalAsync (new LoginPage ());	
 		}
 
 		public async Task<bool> RefreshToken()
 		{
+			if (isRefreshingToken) {
+				return true;
+			} else {
+				isRefreshingToken = true;
+			}
+
 			var store = DependencyService.Get<ITokenStore> ();
 			var new_token = await loginService.RefreshToken (store.getToken());
+			isRefreshingToken = false;
 
 			if (new_token != null) {
 				authToken = new_token;
+				currentSite = mainSite;
+				webService = new WebService ();
+
 				store.saveToken (new_token);
+
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push_token");
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 				return true;
 			} else {
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "trigger_login");
+				ShowLogin ();
+				return false;
 			}
-
-			return false;
 		}
 			
 		protected override void OnSleep ()
@@ -101,6 +113,7 @@ namespace Pleioapp
 
 		protected override void OnResume ()
 		{
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 			pushService.SetBadgeNumber (0);
 		}
 	}

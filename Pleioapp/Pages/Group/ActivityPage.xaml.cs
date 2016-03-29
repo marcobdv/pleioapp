@@ -34,6 +34,11 @@ namespace Pleioapp
 				NumberOfTapsRequired = 1
 			});
 
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
+				var app = (App)App.Current;
+				setGroup(app.currentGroup);
+			});
+
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "logout", async(sender) => {
 				SelectLeft.IsVisible = true;
 			});

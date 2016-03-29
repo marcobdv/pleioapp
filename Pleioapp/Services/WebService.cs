@@ -65,16 +65,25 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of groups...");
 
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of groups");
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of groups");
 
-				var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
-				if (list != null) {
-					return list.entities;
+					var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
+					if (list != null) {
+						return list.entities;
+					}
+				} else {
+					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
+						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
+					}
 				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
 			}
 
 			return new List<Group>();
@@ -109,15 +118,24 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving activities... ");
 
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
-				System.Diagnostics.Debug.WriteLine (content);
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
+					System.Diagnostics.Debug.WriteLine (content);
 
-				var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
-				return list.entities;
+					var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
+					return list.entities;
+				} else {
+					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
+						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
+					}
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
 			}
 
 			return new List<Activity>();
@@ -129,14 +147,19 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving events... ");
 
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
 
-				var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
-				return list.entities;
+					var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
 			}
 
 			return new List<Event>();
@@ -148,14 +171,19 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving members... ");
 
-			var response = await getClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+			try {
+				var response = await getClient().GetAsync (uri);
+				var content = await response.Content.ReadAsStringAsync ();
 
-			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
 
-				var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
-				return list.entities;
+					var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
+					return list.entities;
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
 			}
 
 			return new List<User>();
@@ -188,6 +216,37 @@ namespace Pleioapp
 					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
 						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
 					}
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
+				Xamarin.Insights.Report (e);
+			}
+
+			return false;
+		}
+
+		public async Task<bool>DeregisterPush(string deviceId, string service)
+		{
+			var uri = new Uri (currentSite.url + "api/users/me/deregister_push");
+
+			if (service != "apns" && service != "gcm") {
+				throw new Exception ("Invalid service type specified during push token registration.");
+			}
+
+			try {
+				var formContent = new FormUrlEncodedContent (new [] {
+					new KeyValuePair<string,string>("device_id", deviceId),
+					new KeyValuePair<string,string>("service", service)
+				});
+
+				var response = await getClient().PostAsync(uri, formContent);
+				var content = await response.Content.ReadAsStringAsync();
+
+				if (response.IsSuccessStatusCode) {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Succefully unregistered push token at webservice " + content);
+					return true;
+				} else {
+					System.Diagnostics.Debug.WriteLine ("[Webservice] Could not unregister push token at webservice " + content);
 				}
 			} catch (Exception e) {
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);

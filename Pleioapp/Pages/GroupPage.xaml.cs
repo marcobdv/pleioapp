@@ -22,14 +22,11 @@ namespace Pleioapp
 			Children.Add (activityPage);
 			Children.Add (eventPage);
 			Children.Add (memberPage);
-		}
 
-		public void setGroup(Group group)
-		{
-			BindingContext = group;
-			activityPage.setGroup (group);
-			eventPage.setGroup (group);
-			memberPage.setGroup (group);
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
+				var app = (App)App.Current;
+				BindingContext = app.currentGroup;
+			});
 		}
 	}
 }

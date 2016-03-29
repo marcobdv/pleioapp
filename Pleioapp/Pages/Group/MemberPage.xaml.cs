@@ -33,6 +33,11 @@ namespace Pleioapp
 				}),
 				NumberOfTapsRequired = 1
 			});
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
+				var app = (App)App.Current;
+				setGroup(app.currentGroup);
+			});
 		}
 
 		public async void Reload()
@@ -62,7 +67,7 @@ namespace Pleioapp
 
 		}
 
-		public void setGroup(Group group)
+		public async void setGroup(Group group)
 		{
 			Group = group;
 			if (group == null) {
