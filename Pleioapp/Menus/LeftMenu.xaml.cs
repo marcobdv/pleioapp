@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Pleioapp
 {
@@ -12,7 +13,10 @@ namespace Pleioapp
 
 		ObservableCollection<Group> groups = new ObservableCollection<Group>();
 		Dictionary<int, Site> indexToSite = new Dictionary<int, Site>();
+		Dictionary<Site, int> siteToIndex = new Dictionary<Site, int>();
 		App app = (App) App.Current;
+		bool updatingSitePicker = false;
+		bool updatingGroupPicker = false;
 
 		public ListView Menu;
 
@@ -28,17 +32,22 @@ namespace Pleioapp
 			SitePicker.SelectedIndex = 0;
 
 			SitePicker.SelectedIndexChanged += async(sender, args) => {
-				if (SitePicker.SelectedIndex != -1) {
+				app.ssoService.Expire();
+				app.ssoService.LoadToken();
+
+				if (SitePicker.SelectedIndex != -1 && updatingSitePicker == false) {
 					app.currentSite = indexToSite [SitePicker.SelectedIndex];
 					await GetGroups();
 				}
 			};
 
 			Menu.ItemSelected += (sender, e) =>  {
-				app.currentGroup = e.SelectedItem as Group;
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
+				if (updatingGroupPicker == false) {
+					app.currentGroup = e.SelectedItem as Group;
+					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
+				}
 			};
-				
+
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command (async () => {
 					await GetGroups();
@@ -53,11 +62,13 @@ namespace Pleioapp
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_menu", async(sender) => {
 				GetSites();
 				GetGroups();
+				app.ssoService.LoadToken();
 			});
 		}
 
 		public async void OnLogout() {
-			await app.pushService.DeregisterToken ();
+			app.pushService.DeregisterToken ();	
+			app.ssoService.Expire ();
 
 			app.currentSite = null;
 			app.currentGroup = null;
@@ -66,13 +77,14 @@ namespace Pleioapp
 			var store = DependencyService.Get<ITokenStore> ();
 			store.clearTokens ();
 
-			var service = app.webService;
-
 			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login");
 			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
 		}
 
 		public async Task GetGroups() {
+			updatingGroupPicker = true;
+
 			if (app.currentSite == null) {
 				groups.Clear ();
 				return;
@@ -89,6 +101,13 @@ namespace Pleioapp
 				foreach (Group group in webGroups) {
 					groups.Add (group);
 				}
+
+				if (app.currentGroup != null) {
+					var currentGroup = groups.FirstOrDefault(g => g.guid == app.currentGroup.guid);
+					if (currentGroup != null) {
+						GroupsListView.SelectedItem = currentGroup;
+					}
+				}
 			} catch (Exception e) {
 				CouldNotLoad.IsVisible = true;
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
@@ -96,12 +115,18 @@ namespace Pleioapp
 			}
 
 			ActivityIndicator.IsVisible = false;
+			updatingGroupPicker = false;
 		}
 
 		public async Task GetSites() {
-			for (int i = 1; i <= (SitePicker.Items.Count - 1); i++) {
-				SitePicker.Items.RemoveAt (i); 
+			updatingSitePicker = true;
+
+			int i = 1;
+			while (SitePicker.Items.Count > 1) {
+				SitePicker.Items.RemoveAt (1); 
+				siteToIndex.Remove (indexToSite[i]);
 				indexToSite.Remove (i);
+				i += 1;
 			}
 
 			if (app.authToken == null) {
@@ -111,11 +136,22 @@ namespace Pleioapp
 			int j = 1;
 			var service = app.webService;
 			var webSites = await service.GetSites ();
+
 			foreach (Site site in webSites) {
 				SitePicker.Items.Add (site.name);
 				indexToSite.Add(j, site);
+				siteToIndex.Add (site, j);
 				j += 1;
 			}
+				
+			if (app.currentSite != null) {
+				var currentSite = siteToIndex.Keys.FirstOrDefault (s => s.guid == app.currentSite.guid);
+				if (currentSite != null) {
+					SitePicker.SelectedIndex = siteToIndex [currentSite];
+				}
+			}
+
+			updatingSitePicker = false;
 		}
 	}
 }

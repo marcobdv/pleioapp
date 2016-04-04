@@ -20,6 +20,11 @@ namespace Pleioapp.iOS
 			App = (App) App.Current;
 			WebService = App.webService;
 		}
+			
+		public void Expire() {
+			LoginToken = null;
+			TokenExpiry = 0;
+		}
 
 		public async Task<bool> LoadToken() {
 			System.Diagnostics.Debug.WriteLine ("[SSO] requesting SSO token");
@@ -43,11 +48,14 @@ namespace Pleioapp.iOS
 				Loading = true;
 			}
 				
-			await LoadToken ();
+			if (UnixTimestamp() > LoginExpiry && UnixTimestamp() > TokenExpiry) {
+				await LoadToken ();
+			}
 
 			if (LoginToken != null) {
 				loadUrl = App.currentSite.url + "api/users/me/login_token?user_guid=" + LoginToken.userGuid + "&token=" + LoginToken.token + "&redirect_url=" + Url;
 				LoginToken = null;
+
 				LoginExpiry = UnixTimestamp () + 60 * 60;
 			} else {
 				loadUrl = Url; // could not retrieve token
