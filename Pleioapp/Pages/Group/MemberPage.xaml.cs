@@ -62,7 +62,6 @@ namespace Pleioapp
 			} catch (Exception e) {
 				CouldNotLoad.IsVisible = true;
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
 			}
 
 		}

@@ -32,7 +32,7 @@ namespace Pleioapp
 			SitePicker.SelectedIndex = 0;
 
 			SitePicker.SelectedIndexChanged += async(sender, args) => {
-				if (SitePicker.SelectedIndex != -1 && updatingSitePicker == false) {
+				if (SitePicker.SelectedIndex != -1) {
 					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_site");
 					app.currentSite = indexToSite [SitePicker.SelectedIndex];
 					await GetGroups();
@@ -48,6 +48,7 @@ namespace Pleioapp
 
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command (async () => {
+					await GetSites();
 					await GetGroups();
 				}),
 				NumberOfTapsRequired = 1
@@ -95,6 +96,7 @@ namespace Pleioapp
 
 			try {
 				var webGroups = await service.GetGroups ();
+
 				groups.Clear ();
 				foreach (Group group in webGroups) {
 					groups.Add (group);
@@ -109,7 +111,6 @@ namespace Pleioapp
 			} catch (Exception e) {
 				CouldNotLoad.IsVisible = true;
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
 			}
 
 			ActivityIndicator.IsVisible = false;
@@ -117,7 +118,11 @@ namespace Pleioapp
 		}
 
 		public async Task GetSites() {
-			updatingSitePicker = true;
+			if (updatingSitePicker == false) {
+				updatingSitePicker = true;
+			} else {
+				return;
+			}
 
 			int i = 1;
 			while (SitePicker.Items.Count > 1) {
@@ -128,25 +133,31 @@ namespace Pleioapp
 			}
 
 			if (app.authToken == null) {
+				updatingSitePicker = false;
 				return;
 			}
 
 			int j = 1;
 			var service = app.webService;
-			var webSites = await service.GetSites ();
 
-			foreach (Site site in webSites) {
-				SitePicker.Items.Add (site.name);
-				indexToSite.Add(j, site);
-				siteToIndex.Add (site, j);
-				j += 1;
-			}
-				
-			if (app.currentSite != null) {
-				var currentSite = siteToIndex.Keys.FirstOrDefault (s => s.guid == app.currentSite.guid);
-				if (currentSite != null) {
-					SitePicker.SelectedIndex = siteToIndex [currentSite];
+			try {
+				var webSites = await service.GetSites ();
+
+				foreach (Site site in webSites) {
+					SitePicker.Items.Add (site.name);
+					indexToSite.Add(j, site);
+					siteToIndex.Add (site, j);
+					j += 1;
 				}
+					
+				if (app.currentSite != null) {
+					var currentSite = siteToIndex.Keys.FirstOrDefault (s => s.guid == app.currentSite.guid);
+					if (currentSite != null) {
+						SitePicker.SelectedIndex = siteToIndex [currentSite];
+					}
+				}
+			} catch (Exception e) {
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
 			}
 
 			updatingSitePicker = false;

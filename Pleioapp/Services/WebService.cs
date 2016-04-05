@@ -40,20 +40,15 @@ namespace Pleioapp
 		{
 			var uri = new Uri (currentSite.url + "api/sites/mine");
 
-			try {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of sites...");
-				var response = await getClient().GetAsync (uri);
-				var content = await response.Content.ReadAsStringAsync ();
+			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of sites...");
+			var response = await getClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
 
-				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of sites");
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of sites");
 
-					var list = JsonConvert.DeserializeObject <PaginatedSiteList> (content);
-					return list.entities;
-				}
-			} catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
+				var list = JsonConvert.DeserializeObject <PaginatedSiteList> (content);
+				return list.entities;
 			}
 
 			return new List<Site>();
@@ -65,25 +60,20 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of groups...");
 
-			try {
-				var response = await getClient().GetAsync (uri);
-				var content = await response.Content.ReadAsStringAsync ();
+			var response = await getClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
 
-				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of groups");
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of groups");
 
-					var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
-					if (list != null) {
-						return list.entities;
-					}
-				} else {
-					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
-						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
-					}
+				var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
+				if (list != null) {
+					return list.entities;
 				}
-			} catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
+			} else {
+				if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
+					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
+				}
 			}
 
 			return new List<Group>();
@@ -118,23 +108,18 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving activities... ");
 
-			try {
-				var response = await getClient().GetAsync (uri);
-				var content = await response.Content.ReadAsStringAsync ();
+			var response = await getClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
 
-				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
 
-					var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
-					return list.entities;
-				} else {
-					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
-						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
-					}
+				var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
+				return list.entities;
+			} else {
+				if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
+					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
 				}
-			} catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
 			}
 
 			return new List<Activity>();
@@ -146,19 +131,14 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving events... ");
 
-			try {
-				var response = await getClient().GetAsync (uri);
-				var content = await response.Content.ReadAsStringAsync ();
+			var response = await getClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
 
-				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
 
-					var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
-					return list.entities;
-				}
-			} catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
+				var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
+				return list.entities;
 			}
 
 			return new List<Event>();
@@ -170,19 +150,14 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving members... ");
 
-			try {
-				var response = await getClient().GetAsync (uri);
-				var content = await response.Content.ReadAsStringAsync ();
+			var response = await getClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
 
-				if (response.IsSuccessStatusCode) {
-					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
 
-					var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
-					return list.entities;
-				}
-			} catch (Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
+				var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
+				return list.entities;
 			}
 
 			return new List<User>();

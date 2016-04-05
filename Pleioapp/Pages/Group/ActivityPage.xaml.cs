@@ -62,9 +62,8 @@ namespace Pleioapp
 					NoItems.IsVisible = true;
 				}
 			} catch(Exception e) {
-				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
-				Xamarin.Insights.Report (e);
 				CouldNotLoad.IsVisible = true;
+				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
 			}
 				
 			ActivityIndicator.IsVisible = false;
