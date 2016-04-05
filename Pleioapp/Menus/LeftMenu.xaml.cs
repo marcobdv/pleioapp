@@ -32,10 +32,8 @@ namespace Pleioapp
 			SitePicker.SelectedIndex = 0;
 
 			SitePicker.SelectedIndexChanged += async(sender, args) => {
-				app.ssoService.Expire();
-				app.ssoService.LoadToken();
-
 				if (SitePicker.SelectedIndex != -1 && updatingSitePicker == false) {
+					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_site");
 					app.currentSite = indexToSite [SitePicker.SelectedIndex];
 					await GetGroups();
 				}
@@ -62,13 +60,13 @@ namespace Pleioapp
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_menu", async(sender) => {
 				GetSites();
 				GetGroups();
-				app.ssoService.LoadToken();
 			});
 		}
 
 		public async void OnLogout() {
+			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "logout");
+
 			app.pushService.DeregisterToken ();	
-			app.ssoService.Expire ();
 
 			app.currentSite = null;
 			app.currentGroup = null;

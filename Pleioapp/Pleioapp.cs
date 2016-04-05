@@ -39,16 +39,16 @@ namespace Pleioapp
 			LoadAccessToken ();
 			pushService.SetBadgeNumber (0);
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_token", async(sender) => {
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_access_token", async(sender) => {
 				await RefreshToken();
 			});
-
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_push_token", async(sender) => {
-				RefreshPushToken();
-			});
-
+				
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login", async(sender) => {
 				ShowLogin();
+			});
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
+				RefreshPushToken();
 			});
 		}
 			
@@ -98,7 +98,7 @@ namespace Pleioapp
 
 				store.saveToken (new_token);
 
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push_token");
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 				return true;
 			} else {

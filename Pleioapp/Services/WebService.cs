@@ -78,7 +78,7 @@ namespace Pleioapp
 					}
 				} else {
 					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
-						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
+						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
 					}
 				}
 			} catch (Exception e) {
@@ -130,7 +130,7 @@ namespace Pleioapp
 					return list.entities;
 				} else {
 					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
-						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
+						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
 					}
 				}
 			} catch (Exception e) {
@@ -214,7 +214,7 @@ namespace Pleioapp
 					System.Diagnostics.Debug.WriteLine ("[Webservice] Could not register push token at webservice " + content);
 
 					if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
-						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_token");
+						MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_access_token");
 					}
 				}
 			} catch (Exception e) {

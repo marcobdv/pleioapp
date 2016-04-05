@@ -45,7 +45,7 @@ namespace Pleioapp
 				app.currentSite = app.mainSite;
 				app.webService = new WebService ();
 
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_push_token");
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 
 				await app.MainPage.Navigation.PopModalAsync ();

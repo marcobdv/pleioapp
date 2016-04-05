@@ -19,6 +19,19 @@ namespace Pleioapp.iOS
 		public SSOService() {
 			App = (App) App.Current;
 			WebService = App.webService;
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
+				LoadToken();
+			});
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "logout", async(sender) => {
+				Expire();
+			});
+
+			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_site", async(sender) => {
+				Expire();
+				LoadToken();
+			});
 		}
 			
 		public void Expire() {
