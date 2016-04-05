@@ -124,7 +124,6 @@ namespace Pleioapp
 
 				if (response.IsSuccessStatusCode) {
 					System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
-					System.Diagnostics.Debug.WriteLine (content);
 
 					var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
 					return list.entities;
