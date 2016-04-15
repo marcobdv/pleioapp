@@ -1,0 +1,13 @@
+﻿using System;
+
+namespace Pleioapp
+{
+	public class Constants
+	{
+		public const string Url = "";
+		public const string ClientId = "";
+		public const string ClientSecret = "";
+		public const string InsightsKey = "";
+	}
+}
+

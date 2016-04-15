@@ -38,3 +38,6 @@ Thumbs.db
 
 #dotCover
 *.dotCover
+
+# do not commit configuration
+Pleioapp/Constants.cs
