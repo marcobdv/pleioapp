@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LeftMenu" Title="Left Menu" Icon="hamburger.png" BackgroundColor="#f8f8f8">
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LeftMenu" Title="Left Menu" Icon="hamburger.png">
+	<ContentPage.BackgroundColor>
+		<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
+	</ContentPage.BackgroundColor>
 	<ContentPage.Padding>
 	    <OnPlatform x:TypeArguments="Thickness"
 	                iOS="0, 40, 0, 0"
@@ -11,7 +14,11 @@
                      HorizontalOptions="FillAndExpand"
                      Orientation="Vertical"
                      Spacing="15">
-			<Picker x:Name="SitePicker" BackgroundColor="#f8f8f8" />
+			<Picker x:Name="SitePicker">
+				<Picker.BackgroundColor>
+					<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
+				</Picker.BackgroundColor>
+			</Picker>
 
 			<ContentView x:Name="ActivityIndicator" IsVisible="false">
 				<ActivityIndicator IsRunning="true" />
@@ -27,7 +34,13 @@
 Tik om het opnieuw te proberen.
 			</Label.Text>
 			</Label>
-			<ListView x:Name="GroupsListView" BackgroundColor="#f8f8f8" SeparatorColor="#dbdbdb">
+			<ListView x:Name="GroupsListView">
+			<ListView.BackgroundColor>
+				<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
+			</ListView.BackgroundColor>
+			<ListView.SeparatorColor>
+				<OnPlatform x:TypeArguments="Color" iOS="#dbdbdb" />
+			</ListView.SeparatorColor>
 				<ListView.ItemTemplate>
 					<DataTemplate>
 						<ViewCell>
