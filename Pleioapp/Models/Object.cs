@@ -5,6 +5,8 @@ namespace Pleioapp
 {
 	public class Object
 	{
+		string _iconUrl;
+
 		[JsonProperty]
 		public string guid { get; set; }
 
@@ -24,7 +26,10 @@ namespace Pleioapp
 		public string url { get; set; }
 
 		[JsonProperty(PropertyName="icon_url")]
-		public string iconUrl { get; set; }
+		public string iconUrl {
+			get { return _iconUrl + "?guid=" + guid; }
+			set { _iconUrl = value; }
+		}
 
 		public string humanReadableType { 
 			get {

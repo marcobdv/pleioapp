@@ -27,9 +27,6 @@ namespace Pleioapp
 		[JsonProperty(PropertyName="time_created")]
 		public DateTime timeCreated { get; set; }
 
-		[JsonProperty(PropertyName="icon_url")]
-		public string iconUrl { get; set; }
-
 		public bool hasEndTime {
 			get {
 				if (endTime != default(DateTime)) {
