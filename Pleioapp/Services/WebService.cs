@@ -67,7 +67,7 @@ namespace Pleioapp
 			if (response.IsSuccessStatusCode) {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of groups");
 
-				var list = JsonConvert.DeserializeObject <PaginatedGroupList> (content);
+				var list = JsonConvert.DeserializeObject <PaginatedList<Group>> (content);
 				if (list != null) {
 					return list.entities;
 				}
@@ -115,7 +115,7 @@ namespace Pleioapp
 			if (response.IsSuccessStatusCode) {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved activities");
 
-				var list = JsonConvert.DeserializeObject <PaginatedActivityList> (content);
+				var list = JsonConvert.DeserializeObject <PaginatedList<Activity>> (content);
 				return list.entities;
 			} else {
 				if (response.StatusCode == System.Net.HttpStatusCode.Forbidden) {
@@ -138,7 +138,7 @@ namespace Pleioapp
 			if (response.IsSuccessStatusCode) {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved events");
 
-				var list = JsonConvert.DeserializeObject <PaginatedEventList> (content);
+				var list = JsonConvert.DeserializeObject <PaginatedList<Event>> (content);
 				return list.entities;
 			}
 
@@ -157,7 +157,7 @@ namespace Pleioapp
 			if (response.IsSuccessStatusCode) {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved members");
 
-				var list = JsonConvert.DeserializeObject <PaginatedMemberList> (content);
+				var list = JsonConvert.DeserializeObject <PaginatedList<User>> (content);
 				return list.entities;
 			}
 

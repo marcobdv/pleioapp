@@ -60,17 +60,12 @@
       <DependentUpon>GroupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Models\Activity.cs" />
-    <Compile Include="Models\PaginatedGroupList.cs" />
-    <Compile Include="Models\PaginatedActivityList.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Services\IPushService.cs" />
     <Compile Include="Models\Site.cs" />
-    <Compile Include="Models\PaginatedSiteList.cs" />
     <Compile Include="Models\Event.cs" />
-    <Compile Include="Models\PaginatedEventList.cs" />
     <Compile Include="Services\ISSOService.cs" />
     <Compile Include="Models\SSOToken.cs" />
-    <Compile Include="Models\PaginatedMemberList.cs" />
     <Compile Include="Pages\Group\MemberPage.xaml.cs">
       <DependentUpon>MemberPage.xaml</DependentUpon>
     </Compile>
