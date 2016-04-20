@@ -35,6 +35,7 @@ namespace Pleioapp
 			SitesListView.ItemSelected += async(sender, e) => {
 				app.currentSite = e.SelectedItem as Site;
 				BindingContext = app.currentSite;
+				Groups.Clear();
 				ToggleSubsiteMenu ();
 				await GetGroups ();
 			};
@@ -98,10 +99,11 @@ namespace Pleioapp
 			try {
 				var GroupsAtService = await app.webService.GetGroups ();
 
-				Groups.Clear ();
 				foreach (Group group in GroupsAtService) {
 					if (!Groups.Contains(group)) {
 						Groups.Add (group);
+					} else {
+						Groups.First(g => g.guid == group.guid).activitiesUnreadCount = group.activitiesUnreadCount;
 					}
 				}
 
@@ -126,6 +128,8 @@ namespace Pleioapp
 				foreach (Site site in SitesAtService) {
 					if (!Sites.Contains(site)) {
 						Sites.Add(site);
+					} else {
+						Sites.First(s => s.guid == site.guid).groupsUnreadCount = site.groupsUnreadCount;
 					}
 				}
 

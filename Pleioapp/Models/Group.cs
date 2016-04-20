@@ -8,6 +8,7 @@ namespace Pleioapp
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;
+		private int _activitiesUnreadCount;
 
 		[JsonProperty]
 		public string guid { get; set; }
@@ -24,23 +25,30 @@ namespace Pleioapp
 		[JsonProperty]
 		public string membership { get; set; }
 
-		[JsonProperty(PropertyName="activities_unread_count")]
-		public int activitiesUnreadCount { get; set; }
-
 		public bool Equals(Group other) {
 			return string.Equals (guid, other.guid);
 		}
 			
-		public void MarkAsRead() {
-			activitiesUnreadCount = 0;
-			OnPropertyChanged ("activitiesUnreadCount");
-			OnPropertyChanged ("hasActivitiesUnread");
-		}
-
 		public bool hasActivitiesUnread { 
 			get {
-				return activitiesUnreadCount != 0;
+				return _activitiesUnreadCount != 0;
 			}
+		}
+
+		[JsonProperty(PropertyName="activities_unread_count")]
+		public int activitiesUnreadCount { 
+			get { return _activitiesUnreadCount; }
+			set { 
+				_activitiesUnreadCount = value;
+				OnPropertyChanged ("activitiesUnreadCount");
+				OnPropertyChanged ("hasActivitiesUnread");
+			}
+		}
+
+		public void MarkAsRead() {
+			_activitiesUnreadCount = 0;
+			OnPropertyChanged ("activitiesUnreadCount");
+			OnPropertyChanged ("hasActivitiesUnread");
 		}
 
 		protected virtual void OnPropertyChanged(string propertyName)

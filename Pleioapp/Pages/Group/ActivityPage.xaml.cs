@@ -78,7 +78,9 @@ namespace Pleioapp
 			Reload ();
 
 			if (group.activitiesUnreadCount > 0) {
-				group.MarkAsRead ();
+				app.currentGroup.MarkAsRead ();
+				app.currentSite.groupsUnreadCount -= 1;
+
 				var service = app.webService;
 				await service.MarkGroupAsRead (Group);
 			}

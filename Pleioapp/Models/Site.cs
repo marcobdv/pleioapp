@@ -8,6 +8,7 @@ namespace Pleioapp
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;
+		private int _groupsUnreadCount;
 
 		[JsonProperty]
 		public string guid { get; set; }
@@ -24,19 +25,32 @@ namespace Pleioapp
 		[JsonProperty]
 		public string url { get; set; }
 
-		[JsonProperty(PropertyName="groups_unread_count")]
-		public int groupsUnreadCount { get; set; }
-
-		public bool hasGroupsUnread { 
-			get {
-				return groupsUnreadCount != 0;
-			}
-		}
-
 		public bool Equals(Site other) {
 			return string.Equals (guid, other.guid);
 		}
+			
+		public bool hasGroupsUnread { 
+			get {
+				return _groupsUnreadCount != 0;
+			}
+		}
+			
+		[JsonProperty(PropertyName="groups_unread_count")]
+		public int groupsUnreadCount {
+			get { return _groupsUnreadCount; }
+			set {
+				_groupsUnreadCount = value;
+				OnPropertyChanged ("groupsUnreadCount");
+				OnPropertyChanged ("hasGroupsUnread");
+			}
+		}
 
+		public void MarkAsRead() {
+			_groupsUnreadCount = 0;
+			OnPropertyChanged ("activitiesUnreadCount");
+			OnPropertyChanged ("hasActivitiesUnread");
+		}
+			
 		protected virtual void OnPropertyChanged(string propertyName)
 		{
 			if (PropertyChanged != null)
