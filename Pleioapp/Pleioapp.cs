@@ -76,7 +76,7 @@ namespace Pleioapp
 
 		private async void ShowLogin()
 		{
-			await RootPage.Navigation.PushModalAsync (new LoginPage ());	
+			await RootPage.Navigation.PushModalAsync (new LoginPage ());
 		}
 
 		public async Task<bool> RefreshToken()

@@ -46,8 +46,9 @@ namespace Pleioapp
 
 			if (response.IsSuccessStatusCode) {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of sites");
+				System.Diagnostics.Debug.WriteLine (content);
 
-				var list = JsonConvert.DeserializeObject <PaginatedSiteList> (content);
+				var list = JsonConvert.DeserializeObject <PaginatedList<Site>> (content);
 				return list.entities;
 			}
 

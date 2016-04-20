@@ -170,6 +170,12 @@
     <BundleResource Include="Resources\hamburger.png" />
     <BundleResource Include="Resources\hamburger%402x.png" />
     <BundleResource Include="Resources\hamburger%403x.png" />
+    <BundleResource Include="Resources\caret-down.png" />
+    <BundleResource Include="Resources\caret-down%402x.png" />
+    <BundleResource Include="Resources\caret-down%403x.png" />
+    <BundleResource Include="Resources\caret-right.png" />
+    <BundleResource Include="Resources\caret-right%402x.png" />
+    <BundleResource Include="Resources\caret-right%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />

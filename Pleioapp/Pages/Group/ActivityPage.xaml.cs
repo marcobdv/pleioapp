@@ -9,7 +9,6 @@ namespace Pleioapp
 	{
 		ObservableCollection<Activity> activities = new ObservableCollection<Activity>();
 		App app = (App) App.Current;
-		Activity SelectedItem = null;
 		Group Group;
 
 		public ActivityPage ()
@@ -17,14 +16,11 @@ namespace Pleioapp
 			InitializeComponent ();
 			ActivityListView.ItemsSource = activities;
 
-			ActivityListView.ItemTapped += (sender, e) => {
-				if (ActivityListView.SelectedItem == SelectedItem) {
-					if (SelectedItem.targetObject.url != null) {
-						app.ssoService.OpenUrl(SelectedItem.targetObject.url);
-					}
+			ActivityListView.ItemSelected += (sender, e) => {
+				var activity = e.SelectedItem as Activity;
+				if (activity.targetObject.url != null) {
+					app.ssoService.OpenUrl(activity.targetObject.url);
 				}
-
-				SelectedItem = (Activity) ActivityListView.SelectedItem;
 			};
 
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {

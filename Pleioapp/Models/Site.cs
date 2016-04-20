@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Pleioapp
 {
-	public class Site : INotifyPropertyChanged
+	public class Site : IEquatable<Site>, INotifyPropertyChanged
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;
@@ -24,12 +24,17 @@ namespace Pleioapp
 		[JsonProperty]
 		public string url { get; set; }
 
-		[JsonProperty(PropertyName="activities_unread_count")]
-		public int activitiesUnreadCount { get; set; }
+		[JsonProperty(PropertyName="groups_unread_count")]
+		public int groupsUnreadCount { get; set; }
 
-		public void MarkAsRead() {
-			activitiesUnreadCount = 0;
-			OnPropertyChanged ("activitiesUnreadCount");
+		public bool hasGroupsUnread { 
+			get {
+				return groupsUnreadCount != 0;
+			}
+		}
+
+		public bool Equals(Site other) {
+			return string.Equals (guid, other.guid);
 		}
 
 		protected virtual void OnPropertyChanged(string propertyName)

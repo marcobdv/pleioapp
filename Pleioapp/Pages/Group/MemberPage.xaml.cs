@@ -10,23 +10,20 @@ namespace Pleioapp
 	{
 		ObservableCollection<User> members = new ObservableCollection<User>();
 		App app = (App) App.Current;
-		User SelectedItem = null;
 		Group Group;
 
 		public MemberPage ()
 		{
 			InitializeComponent ();
 			MemberListView.ItemsSource = members;
-			MemberListView.ItemTapped += (sender, e) => {
-				if (MemberListView.SelectedItem == SelectedItem) {
-					if (SelectedItem.url != null) {
-						app.ssoService.OpenUrl(SelectedItem.url);
-					}
+
+			MemberListView.ItemSelected += (sender, e) => {
+				var member = e.SelectedItem as User;
+				if (member.url != null) {
+					app.ssoService.OpenUrl(member.url);
 				}
-
-				SelectedItem = (User) MemberListView.SelectedItem;
 			};
-
+				
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command (() => {
 					Reload();

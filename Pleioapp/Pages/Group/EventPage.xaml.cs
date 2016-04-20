@@ -10,21 +10,18 @@ namespace Pleioapp
 	{
 		ObservableCollection<Event> events = new ObservableCollection<Event>();
 		App app = (App) App.Current;
-		Event SelectedItem = null;
 		Group Group;
 
 		public EventPage ()
 		{
 			InitializeComponent ();
 			EventListView.ItemsSource = events;
-			EventListView.ItemTapped += (sender, e) => {
-				if (EventListView.SelectedItem == SelectedItem) {
-					if (SelectedItem.url != null) {
-						app.ssoService.OpenUrl(SelectedItem.url);
-					}
-				}
 
-				SelectedItem = (Event) EventListView.SelectedItem;
+			EventListView.ItemSelected += (sender, e) => {
+				var selectedEvent = e.SelectedItem as Event;
+				if (selectedEvent.url != null) {
+					app.ssoService.OpenUrl(selectedEvent.url);
+				}
 			};
 
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {

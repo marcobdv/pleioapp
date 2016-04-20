@@ -10,40 +10,38 @@ namespace Pleioapp
 {
 	public partial class LeftMenu : ContentPage
 	{
+		ObservableCollection<Site> Sites = new ObservableCollection<Site> ();
+		ObservableCollection<Group> Groups = new ObservableCollection<Group>();
+		public Site CurrentSite;
 
-		ObservableCollection<Group> groups = new ObservableCollection<Group>();
-		Dictionary<int, Site> indexToSite = new Dictionary<int, Site>();
-		Dictionary<Site, int> siteToIndex = new Dictionary<Site, int>();
 		App app = (App) App.Current;
-		bool updatingSitePicker = false;
-		bool updatingGroupPicker = false;
 
 		public ListView Menu;
-
 		public LeftMenu ()
 		{
 			InitializeComponent ();
 
 			Menu = GroupsListView;
-			GroupsListView.ItemsSource = groups;
+			BindingContext = app.currentSite;
 
-			indexToSite.Add (0, app.mainSite);
-			SitePicker.Items.Add (app.mainSite.name);
-			SitePicker.SelectedIndex = 0;
+			GroupsListView.ItemsSource = Groups;
+			SitesListView.ItemsSource = Sites;
+			Sites.Add (app.mainSite);
 
-			SitePicker.SelectedIndexChanged += async(sender, args) => {
-				if (SitePicker.SelectedIndex != -1) {
-					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_site");
-					app.currentSite = indexToSite [SitePicker.SelectedIndex];
-					await GetGroups();
-				}
+			SiteName.GestureRecognizers.Add (new TapGestureRecognizer {
+				Command = new Command(() => ToggleSubsiteMenu())
+			});
+					
+			SitesListView.ItemSelected += async(sender, e) => {
+				app.currentSite = e.SelectedItem as Site;
+				BindingContext = app.currentSite;
+				ToggleSubsiteMenu ();
+				await GetGroups ();
 			};
 
 			Menu.ItemSelected += (sender, e) =>  {
-				if (updatingGroupPicker == false) {
-					app.currentGroup = e.SelectedItem as Group;
-					MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
-				}
+				app.currentGroup = e.SelectedItem as Group;
+				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
 			};
 
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
@@ -63,7 +61,14 @@ namespace Pleioapp
 				GetGroups();
 			});
 		}
-
+			
+		public void ToggleSubsiteMenu() {
+			SitesListView.IsVisible = !SitesListView.IsVisible;
+			GroupsListView.IsVisible = !GroupsListView.IsVisible;
+			SiteNameCaretDown.IsVisible = !SiteNameCaretDown.IsVisible;
+			SiteNameCaretRight.IsVisible = !SiteNameCaretRight.IsVisible;
+		}
+			
 		public async void OnLogout() {
 			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "logout");
 
@@ -82,85 +87,56 @@ namespace Pleioapp
 		}
 
 		public async Task GetGroups() {
-			updatingGroupPicker = true;
-
 			if (app.currentSite == null) {
-				groups.Clear ();
+				Groups.Clear ();
 				return;
 			}
 
 			CouldNotLoad.IsVisible = false;
 			ActivityIndicator.IsVisible = true;
 
-			var service = app.webService;
-
 			try {
-				var webGroups = await service.GetGroups ();
+				var GroupsAtService = await app.webService.GetGroups ();
 
-				groups.Clear ();
-				foreach (Group group in webGroups) {
-					groups.Add (group);
-				}
-
-				if (app.currentGroup != null) {
-					var currentGroup = groups.FirstOrDefault(g => g.guid == app.currentGroup.guid);
-					if (currentGroup != null) {
-						GroupsListView.SelectedItem = currentGroup;
+				Groups.Clear ();
+				foreach (Group group in GroupsAtService) {
+					if (!Groups.Contains(group)) {
+						Groups.Add (group);
 					}
 				}
+
+				foreach (Group group in Groups) {
+					if (!GroupsAtService.Contains(group)) {
+						Groups.Remove(group);
+					}
+				}
+
 			} catch (Exception e) {
 				CouldNotLoad.IsVisible = true;
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
 			}
 
 			ActivityIndicator.IsVisible = false;
-			updatingGroupPicker = false;
 		}
 
 		public async Task GetSites() {
-			if (updatingSitePicker == false) {
-				updatingSitePicker = true;
-			} else {
-				return;
-			}
-
-			int i = 1;
-			while (SitePicker.Items.Count > 1) {
-				SitePicker.Items.RemoveAt (1); 
-				siteToIndex.Remove (indexToSite[i]);
-				indexToSite.Remove (i);
-				i += 1;
-			}
-
-			if (app.authToken == null) {
-				updatingSitePicker = false;
-				return;
-			}
-
-			int j = 1;
-			var service = app.webService;
-
 			try {
-				var webSites = await service.GetSites ();
+				var SitesAtService = await app.webService.GetSites ();
 
-				foreach (Site site in webSites) {
-					SitePicker.Items.Add (site.name);
-					indexToSite.Add(j, site);
-					siteToIndex.Add (site, j);
-					j += 1;
+				foreach (Site site in SitesAtService) {
+					if (!Sites.Contains(site)) {
+						Sites.Add(site);
+					}
 				}
-					
-				if (app.currentSite != null) {
-					var currentSite = siteToIndex.Keys.FirstOrDefault (s => s.guid == app.currentSite.guid);
-					if (currentSite != null) {
-						SitePicker.SelectedIndex = siteToIndex [currentSite];
+
+				foreach (Site site in Sites) {
+					if (!SitesAtService.Contains(site) && site != app.mainSite) {
+						Sites.Remove(site);
 					}
 				}
 			} catch (Exception e) {
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
 			}
-
-			updatingSitePicker = false;
 		}
 	}
 }

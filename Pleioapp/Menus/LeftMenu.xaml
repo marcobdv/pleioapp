@@ -4,36 +4,26 @@
 		<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
 	</ContentPage.BackgroundColor>
 	<ContentPage.Padding>
-	    <OnPlatform x:TypeArguments="Thickness"
-	                iOS="0, 40, 0, 0"
-	                Android="0, 20, 0, 0"
-	                WinPhone="0, 20, 0, 0" />
+	    <OnPlatform x:TypeArguments="Thickness" iOS="0, 40, 0, 0" Android="0, 20, 0, 0" WinPhone="0, 20, 0, 0" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand"
-                     HorizontalOptions="FillAndExpand"
-                     Orientation="Vertical"
-                     Spacing="15">
-			<Picker x:Name="SitePicker">
-				<Picker.BackgroundColor>
-					<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
-				</Picker.BackgroundColor>
-			</Picker>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Orientation="Vertical" Spacing="15">
+        	<StackLayout x:Name="SiteName" Orientation="Horizontal" Spacing="15" Padding="15, 0, 0, 0">
+				<Image x:Name="SiteNameCaretRight" Source="caret-right.png" />
+				<Image x:Name="SiteNameCaretDown" Source="caret-down.png" IsVisible="false" />
+				<Label x:Name="SiteNameLabel" Text="{Binding name}" Font="Bold" LineBreakMode="TailTruncation" />
+        	</StackLayout>
 
 			<ContentView x:Name="ActivityIndicator" IsVisible="false">
 				<ActivityIndicator IsRunning="true" />
 			</ContentView>
 
-			<Label x:Name="CouldNotLoad" 
-				TextColor="Gray" 
-				HorizontalTextAlignment="Center"
-				IsVisible="false"
-			>
-			<Label.Text>
-				Kan de groep niet laden.
+			<Label x:Name="CouldNotLoad" TextColor="Gray" HorizontalTextAlignment="Center" IsVisible="false">
+			<Label.Text>Kan de groep niet laden.
 Tik om het opnieuw te proberen.
 			</Label.Text>
 			</Label>
+
 			<ListView x:Name="GroupsListView">
 			<ListView.BackgroundColor>
 				<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
@@ -52,6 +42,26 @@ Tik om het opnieuw te proberen.
 					</DataTemplate>
 				</ListView.ItemTemplate>
 			</ListView>
+
+			<ListView x:Name="SitesListView" IsVisible="false">
+			<ListView.BackgroundColor>
+				<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
+			</ListView.BackgroundColor>
+			<ListView.SeparatorColor>
+				<OnPlatform x:TypeArguments="Color" iOS="#dbdbdb" />
+			</ListView.SeparatorColor>
+				<ListView.ItemTemplate>
+					<DataTemplate>
+						<ViewCell>
+							<StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+								<Label Text="{Binding name}" />
+								<Label Text="{Binding groupsUnreadCount}" IsVisible="{Binding hasGroupsUnread}" TextColor="Red" />
+							</StackLayout>
+						</ViewCell>
+					</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+
 			<Button x:Name="LogoutButton" Text="Uitloggen" />
 		</StackLayout>
 	</ContentPage.Content>
