@@ -35,7 +35,7 @@ Tik om het opnieuw te proberen.
 					<DataTemplate>
 						<ViewCell>
 							<StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
-								<Label Text="{Binding name}" />
+								<Label Text="{Binding name}" LineBreakMode="TailTruncation" />
 								<Label Text="{Binding activitiesUnreadCount}" IsVisible="{Binding hasActivitiesUnread}" TextColor="Red" />
 							</StackLayout>
 						</ViewCell>
@@ -54,7 +54,7 @@ Tik om het opnieuw te proberen.
 					<DataTemplate>
 						<ViewCell>
 							<StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
-								<Label Text="{Binding name}" />
+								<Label Text="{Binding name}" LineBreakMode="TailTruncation" />
 								<Label Text="{Binding groupsUnreadCount}" IsVisible="{Binding hasGroupsUnread}" TextColor="Red" />
 							</StackLayout>
 						</ViewCell>
