@@ -18,26 +18,6 @@ namespace Pleioapp
 			leftMenu.IsVisible = true;
 			Detail = new NavigationPage(groupPage);
 		}
-
-	    protected override void OnAppearing()
-	    {
-	        base.OnAppearing();
-
-	        LoadAccessToken();
-	    }
-
-        private void LoadAccessToken()
-        {
-            var token = DependencyService.Get<ITokenStore>().getToken();
-
-            if (token != null)
-            {
-                MessagingCenter.Send<Xamarin.Forms.Application>(App.Current, "refresh_menu");
-            }
-            else {
-                MessagingCenter.Send<Xamarin.Forms.Application>(App.Current, "login");
-            }
-        }
-    }
+	}
 }
 
