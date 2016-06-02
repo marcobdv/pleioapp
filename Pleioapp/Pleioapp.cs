@@ -61,7 +61,7 @@ namespace Pleioapp
 				RefreshPushToken ();
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
 			} else {
-				ShowLogin ();
+				//ShowLogin ();
 			}
 		}
 
