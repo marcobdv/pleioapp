@@ -1,8 +1,8 @@
 ﻿using Xamarin.Forms;
-using Xamarin.Auth;
 using System.Linq;
 using System.Collections.Generic;
 using Pleioapp.WP8;
+using Xamarin.Auth;
 
 [assembly: Dependency(typeof(CredentialStore))]
 namespace Pleioapp.WP8
@@ -14,7 +14,6 @@ namespace Pleioapp.WP8
 
 		public CredentialStore() {
 			store = AccountStore.Create();
-			var records = store.FindAccountsForService (context);
 		}
 
 		public void saveToken(AuthToken token) {
@@ -30,7 +29,7 @@ namespace Pleioapp.WP8
 		}
 
 		public AuthToken getToken() {
-			var account = store.FindAccountsForService (context).FirstOrDefault ();
+            var account = store.FindAccountsForService (context).FirstOrDefault ();
 
 			if (account == null) {
 				return null;
@@ -44,11 +43,16 @@ namespace Pleioapp.WP8
 				if (account.Properties.ContainsKey("refresh_token")) { token.refreshToken = account.Properties ["refresh_token"]; }
 				return token;
 			}
-		}
+        }
 
 		public void clearTokens() {
 			var accounts = AccountStore.Create().FindAccountsForService(context).ToList();
-			//accounts.ForEach(account => AccountStore.Create().Delete(account, context));
-		}
+
+		    foreach (var account in accounts)
+		    {
+                store.Delete(account, context);
+
+            }
+        }
 	}
 }

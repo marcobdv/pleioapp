@@ -9,40 +9,41 @@ namespace Pleioapp.WP8
 {
 	public class PushService : IPushService
 	{
-	    public void RequestToken()
-	    {
-	        throw new NotImplementedException();
-	    }
+        public void RequestToken()
+        {
+            return;
+        }
 
-	    public void SaveToken(string deviceToken)
-	    {
-	        throw new NotImplementedException();
-	    }
+        public void SetBadgeNumber(int number)
+        {
+            return;
+        }
 
-	    public void SetBadgeNumber(int number)
-	    {
-	        throw new NotImplementedException();
-	    }
+        public void SaveToken(string DeviceToken)
+        {
+            return;
+        }
 
-	    public void ProcessPushNotification(Dictionary<string, string> data)
-	    {
-	        throw new NotImplementedException();
-	    }
+        public string GetToken()
+        {
+            return "";
+        }
 
-	    public string GetToken()
-	    {
-	        throw new NotImplementedException();
-	    }
+        public async Task<bool> RegisterToken()
+        {
+            return true;
+        }
 
-	    public Task<bool> RegisterToken()
-	    {
-	        throw new NotImplementedException();
-	    }
+        public async Task<bool> DeregisterToken()
+        {
+            return true;
+        }
 
-	    public Task<bool> DeregisterToken()
-	    {
-	        throw new NotImplementedException();
-	    }
-	}
+        public void ProcessPushNotification(Dictionary<string, string> data)
+        {
+            //System.Diagnostics.Debug.WriteLine("Received a push notification " + data.ToString());
+            //MessagingCenter.Send<Xamarin.Forms.Application>(App.Current, "refresh_menu");
+        }
+    }
 }
 
