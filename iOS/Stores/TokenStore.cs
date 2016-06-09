@@ -9,7 +9,7 @@ namespace Pleioapp.iOS
 {
 	public class CredentialStore : ITokenStore
 	{
-		static string context = "Pleio";
+		static string context = "Pleio2";
 		AccountStore store;
 
 		public CredentialStore() {
