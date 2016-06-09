@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.FilePage"  Title="Bestanden" Icon="icon-file.png">
+	<ContentPage.Content>
+		<StackLayout VerticalOptions="FillAndExpand"
+                     HorizontalOptions="FillAndExpand"
+                     Orientation="Vertical"
+                     Spacing="15">
+			<ContentView x:Name="CouldNotLoad" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Kan de bestanden niet laden.
+Tik hier om opnieuw te proberen.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ContentView x:Name="NoItems" Padding="20" IsVisible="false">
+				<Label TextColor="Gray" HorizontalTextAlignment="Center">
+				<Label.Text>
+					Er zijn geen bestanden.
+				</Label.Text>
+				</Label>
+			</ContentView>
+			<ListView x:Name="FileListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
+				<ListView.ItemTemplate>
+						<DataTemplate>
+							<ViewCell>
+		                        <StackLayout Orientation="Horizontal" Padding="15, 10, 15, 10">
+		                        	<Image>
+										<Image.Triggers>
+			                        		<DataTrigger TargetType="Image" Binding="{Binding subtype}" Value="file">
+			                        			<Setter Property="Source" Value="file.png" />
+											</DataTrigger>
+			                        		<DataTrigger TargetType="Image" Binding="{Binding subtype}" Value="folder">
+			                        			<Setter Property="Source" Value="folder.png" />
+											</DataTrigger>
+										</Image.Triggers>
+									</Image>
+									<Label Text="{Binding title}" />
+		                        </StackLayout>
+							</ViewCell>
+						</DataTemplate>
+				</ListView.ItemTemplate>
+			</ListView>
+		</StackLayout>
+	</ContentPage.Content>
+</ContentPage>

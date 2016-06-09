@@ -164,6 +164,25 @@ namespace Pleioapp
 			return new List<User>();
 		}
 
+		public async Task<List<FSObject>> GetFiles(Group group)
+		{
+			var uri = new Uri(currentSite.url + "api/groups/" + group.guid + "/files?limit=100");
+			System.Diagnostics.Debug.WriteLine("[Webservice] Retrieving files... ");
+
+			var response = await getClient().GetAsync(uri);
+			var content = await response.Content.ReadAsStringAsync();
+
+			if (response.IsSuccessStatusCode)
+			{
+				System.Diagnostics.Debug.WriteLine("[Webservice] Retrieved files");
+
+				var list = JsonConvert.DeserializeObject<PaginatedList<FSObject>>(content);
+				return list.entities;
+			}
+
+			return new List<FSObject>();
+		}
+
 		public async Task<bool> RegisterPush(string deviceId, string token, string service)
 		{
 			var uri = new Uri (currentSite.url + "api/users/me/register_push");

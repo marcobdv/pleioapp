@@ -200,10 +200,6 @@
     </XamarinComponentReference>
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\icon-file.png" />
-    <BundleResource Include="Resources\icon-profile.png" />
-    <BundleResource Include="Resources\icon-activity.png" />
-    <BundleResource Include="Resources\icon-event.png" />
     <BundleResource Include="Resources\hamburger.png" />
     <BundleResource Include="Resources\hamburger%402x.png" />
     <BundleResource Include="Resources\hamburger%403x.png" />
@@ -213,6 +209,20 @@
     <BundleResource Include="Resources\caret-right.png" />
     <BundleResource Include="Resources\caret-right%402x.png" />
     <BundleResource Include="Resources\caret-right%403x.png" />
+    <BundleResource Include="Resources\icon-activity.png" />
+    <BundleResource Include="Resources\icon-activity%402x.png" />
+    <BundleResource Include="Resources\icon-activity%403x.png" />
+    <BundleResource Include="Resources\icon-event.png" />
+    <BundleResource Include="Resources\icon-event%402x.png" />
+    <BundleResource Include="Resources\icon-event%403x.png" />
+    <BundleResource Include="Resources\icon-file.png" />
+    <BundleResource Include="Resources\icon-file%402x.png" />
+    <BundleResource Include="Resources\icon-file%403x.png" />
+    <BundleResource Include="Resources\icon-profile.png" />
+    <BundleResource Include="Resources\icon-profile%402x.png" />
+    <BundleResource Include="Resources\icon-profile%403x.png" />
+    <BundleResource Include="Resources\folder.png" />
+    <BundleResource Include="Resources\file.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />

@@ -10,6 +10,7 @@ namespace Pleioapp
 		ActivityPage activityPage;
 		EventPage eventPage;
 		MemberPage memberPage;
+		FilePage filePage;
 
 		public GroupPage ()
 		{
@@ -18,10 +19,12 @@ namespace Pleioapp
 			activityPage = new ActivityPage ();
 			eventPage = new EventPage ();
 			memberPage = new MemberPage ();
+			filePage = new FilePage();
 
 			Children.Add (activityPage);
 			Children.Add (eventPage);
 			Children.Add (memberPage);
+			Children.Add (filePage);
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
 				var app = (App)App.Current;
