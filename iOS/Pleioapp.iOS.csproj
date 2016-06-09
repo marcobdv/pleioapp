@@ -223,6 +223,10 @@
     <BundleResource Include="Resources\icon-profile%403x.png" />
     <BundleResource Include="Resources\folder.png" />
     <BundleResource Include="Resources\file.png" />
+    <BundleResource Include="Resources\file%402x.png" />
+    <BundleResource Include="Resources\file%403x.png" />
+    <BundleResource Include="Resources\folder%402x.png" />
+    <BundleResource Include="Resources\folder%403x.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
