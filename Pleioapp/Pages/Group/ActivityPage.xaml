@@ -9,7 +9,7 @@
 					<ActivityIndicator IsRunning="true" />
 				</ContentView>
 				<ContentView x:Name="SelectLeft" Padding="20">
-					<Label Text="Selecteer een groep aan de linkerkant."
+					<Label Text="Selecteer een groep in het menu."
 						TextColor="Gray"
 						HorizontalTextAlignment="Center"
 					/>
