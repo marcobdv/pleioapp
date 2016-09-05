@@ -8,7 +8,7 @@ namespace Pleioapp
 		public const string ClientId = "";
 		public const string ClientSecret = "";
 		public const string InsightsKey = "";
-                public const string GCMSenderId = "";
+		public const string GCMSenderId = "";
 	}
 }
 
