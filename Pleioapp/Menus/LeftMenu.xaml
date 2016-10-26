@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LeftMenu" Title="Left Menu" Icon="hamburger.png">
 	<ContentPage.BackgroundColor>
 		<OnPlatform x:TypeArguments="Color" iOS="#f8f8f8" />
@@ -9,8 +9,7 @@
 	<ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Orientation="Vertical" Spacing="15">
         	<StackLayout x:Name="SiteName" Orientation="Horizontal" Spacing="15" Padding="15, 0, 0, 0">
-				<Image x:Name="SiteNameCaretRight" Source="caret-right.png" />
-				<Image x:Name="SiteNameCaretDown" Source="caret-down.png" IsVisible="false" />
+        		<Image x:Name="SiteNameCaretDown" Source="caret-down.png" />
 				<Label x:Name="SiteNameLabel" Text="{Binding name}" Font="Bold" LineBreakMode="TailTruncation" />
         	</StackLayout>
 

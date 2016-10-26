@@ -66,8 +66,12 @@ namespace Pleioapp
 		public void ToggleSubsiteMenu() {
 			SitesListView.IsVisible = !SitesListView.IsVisible;
 			GroupsListView.IsVisible = !GroupsListView.IsVisible;
-			SiteNameCaretDown.IsVisible = !SiteNameCaretDown.IsVisible;
-			SiteNameCaretRight.IsVisible = !SiteNameCaretRight.IsVisible;
+
+			if (SitesListView.IsVisible) {
+				SiteNameCaretDown.RotateXTo(180, 250);
+			} else {
+				SiteNameCaretDown.RotateXTo(0, 250);
+			}
 		}
 			
 		public async void OnLogout() {
