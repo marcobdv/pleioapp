@@ -65,9 +65,11 @@ namespace Pleioapp
 			}
 		}
 
-		private async void RefreshPushToken()
+		private void RefreshPushToken()
 		{
-            await Task.Run(() => {
+
+			Device.BeginInvokeOnMainThread(async () => 
+				{
                 if (pushService.GetToken() == null)
                 {
                     pushService.RequestToken();
