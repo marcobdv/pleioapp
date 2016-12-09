@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -10,40 +8,33 @@ namespace Pleioapp
 {
 	public partial class LeftMenu : ContentPage
 	{
-		ObservableCollection<Site> Sites = new ObservableCollection<Site> ();
-		ObservableCollection<Group> Groups = new ObservableCollection<Group>();
+	    private readonly ObservableCollection<Site> _sites = new ObservableCollection<Site> ();
+		public ObservableCollection<Group> Groups = new ObservableCollection<Group>();
 		public Site CurrentSite;
 
-		App app = (App) App.Current;
+	    private readonly App _app = (App) Application.Current;
 
 		public ListView Menu;
+	    public ListView SiteMenu;
 		public LeftMenu ()
 		{
 			InitializeComponent ();
 
 			Menu = GroupsListView;
-			BindingContext = app.CurrentSite;
+		    SiteMenu = SitesListView;
+			BindingContext = _app.CurrentSite;
 
 			GroupsListView.ItemsSource = Groups;
-			SitesListView.ItemsSource = Sites;
-			Sites.Add (app.MainSite);
+			SitesListView.ItemsSource = _sites;
+			_sites.Add (_app.MainSite);
 
 			SiteName.GestureRecognizers.Add (new TapGestureRecognizer {
-				Command = new Command(() => ToggleSubsiteMenu())
+				Command = new Command(ToggleSubsiteMenu)
 			});
 					
-			SitesListView.ItemSelected += async(sender, e) => {
-				app.CurrentSite = e.SelectedItem as Site;
-				BindingContext = app.CurrentSite;
-				Groups.Clear();
-				ToggleSubsiteMenu ();
-				await GetGroups ();
-			};
+			
 
-			Menu.ItemSelected += (sender, e) =>  {
-				app.CurrentGroup = e.SelectedItem as Group;
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
-			};
+			
 
 			CouldNotLoad.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command (async () => {
@@ -57,42 +48,41 @@ namespace Pleioapp
 				OnLogout();
 			};
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_menu", async(sender) => {
+			MessagingCenter.Subscribe<Application> (Application.Current, "refresh_menu", async(sender) => {
 				GetSites();
 				GetGroups();
 			});
 		}
-			
-		public void ToggleSubsiteMenu() {
+
+
+
+
+	    public void ToggleSubsiteMenu() {
 			SitesListView.IsVisible = !SitesListView.IsVisible;
 			GroupsListView.IsVisible = !GroupsListView.IsVisible;
 
-			if (SitesListView.IsVisible) {
-				SiteNameCaretDown.RotateXTo(180, 250);
-			} else {
-				SiteNameCaretDown.RotateXTo(0, 250);
-			}
-		}
+	        SiteNameCaretDown.RotateXTo(SitesListView.IsVisible ? 180 : 0, 250);
+	    }
 			
 		public async void OnLogout() {
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "logout");
+			MessagingCenter.Send (Application.Current, "logout");
 
-			app.PushService.DeregisterToken ();	
+			await _app.PushService.DeregisterToken ();	
 
-			app.CurrentSite = null;
-			app.CurrentGroup = null;
-			app.AuthToken = null;
+			_app.CurrentSite = null;
+			_app.CurrentGroup = null;
+			_app.AuthToken = null;
 
 			var store = DependencyService.Get<ITokenStore> ();
 			store.clearTokens ();
 
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login");
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
+			MessagingCenter.Send (Application.Current, "login");
+			MessagingCenter.Send (Application.Current, "refresh_menu");
+			MessagingCenter.Send (Application.Current, "select_group");
 		}
 
 		public async Task GetGroups() {
-			if (app.CurrentSite == null) {
+			if (_app.CurrentSite == null) {
 				Groups.Clear ();
 				return;
 			}
@@ -101,9 +91,9 @@ namespace Pleioapp
 			ActivityIndicator.IsVisible = true;
 
 			try {
-				var GroupsAtService = await app.WebService.GetGroups ();
+				var groupsAtService = await _app.WebService.GetGroups ();
 
-				foreach (Group group in GroupsAtService) {
+				foreach (Group group in groupsAtService) {
 					if (!Groups.Contains(group)) {
 						Groups.Add (group);
 					} else {
@@ -112,7 +102,7 @@ namespace Pleioapp
 				}
 
 				foreach (Group group in Groups) {
-					if (!GroupsAtService.Contains(group)) {
+					if (!groupsAtService.Contains(group)) {
 						Groups.Remove(group);
 					}
 				}
@@ -127,19 +117,19 @@ namespace Pleioapp
 
 		public async Task GetSites() {
 			try {
-				var SitesAtService = await app.WebService.GetSites ();
+				var sitesAtService = await _app.WebService.GetSites ();
 
-				foreach (Site site in SitesAtService) {
-					if (!Sites.Contains(site)) {
-						Sites.Add(site);
+				foreach (Site site in sitesAtService) {
+					if (!_sites.Contains(site)) {
+						_sites.Add(site);
 					} else {
-						Sites.First(s => s.guid == site.guid).groupsUnreadCount = site.groupsUnreadCount;
+						_sites.First(s => s.guid == site.guid).groupsUnreadCount = site.groupsUnreadCount;
 					}
 				}
 
-				foreach (Site site in Sites) {
-					if (!SitesAtService.Contains(site) && site != app.MainSite) {
-						Sites.Remove(site);
+				foreach (Site site in _sites) {
+					if (!sitesAtService.Contains(site) && site != _app.MainSite) {
+						_sites.Remove(site);
 					}
 				}
 			} catch (Exception e) {
