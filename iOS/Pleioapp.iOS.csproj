@@ -45,6 +45,8 @@
     <IpaPackageName>
     </IpaPackageName>
     <MtouchUseLlvm>true</MtouchUseLlvm>
+    <CodesignProvision></CodesignProvision>
+<AssemblyName>PleioappiOS.exe</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -77,6 +79,7 @@
     <DeviceSpecificBuild>true</DeviceSpecificBuild>
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchUseSGen>true</MtouchUseSGen>
+<AssemblyName>PleioappiOS.exe</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -251,6 +254,7 @@
     <BundleResource Include="Resources\file%403x.png" />
     <BundleResource Include="Resources\folder%402x.png" />
     <BundleResource Include="Resources\folder%403x.png" />
+    <BundleResource Include="Resources\logo.png" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Resources\LaunchScreen.xib" />
