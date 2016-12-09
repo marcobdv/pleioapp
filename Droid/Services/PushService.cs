@@ -31,7 +31,7 @@ namespace Pleioapp.Droid
 		public async Task<bool> RegisterToken()
 		{
 			var app = (App)App.Current;
-			var service = app.webService;
+			var service = app.WebService;
             var deviceId = Android.Provider.Settings.Secure.GetString(Xamarin.Forms.Forms.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
             var token = GetToken();
 
@@ -41,7 +41,7 @@ namespace Pleioapp.Droid
 		public Task<bool> DeregisterToken()
 		{
 			var app = (App)App.Current;
-			var service = app.webService;
+			var service = app.WebService;
             var deviceId = Android.Provider.Settings.Secure.GetString(Xamarin.Forms.Forms.Context.ContentResolver, Android.Provider.Settings.Secure.AndroidId);
 
             return service.DeregisterPush(deviceId, "gcm");

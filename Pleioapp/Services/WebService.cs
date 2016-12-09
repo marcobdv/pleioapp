@@ -17,7 +17,7 @@ namespace Pleioapp
 	    private Site currentSite { 
 			get {
 				var app = (App)Application.Current;
-				return app.currentSite;
+				return app.CurrentSite;
 			}
 		}
 
@@ -25,11 +25,11 @@ namespace Pleioapp
 		{
 			if (_client == null) {
 				var app = (App)Application.Current;
-				if (app.authToken == null) {
+				if (app.AuthToken == null) {
 					throw new Exception ("Tried to perform a protected API call but there is no OAuth2 authentication token initialized.");
 				}
 
-				_token = app.authToken;
+				_token = app.AuthToken;
 				_client = new HttpClient ();
 				_client.DefaultRequestHeaders.Add ("Authorization", $"Bearer {_token.accessToken}");
 			}

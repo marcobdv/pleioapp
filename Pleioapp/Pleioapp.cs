@@ -5,128 +5,157 @@ using System.Threading.Tasks;
 
 namespace Pleioapp
 {
-	public class App : Application
-	{
-		public MainPage RootPage;
-		public Site mainSite;
-		public Site currentSite;
-		public Group currentGroup;
-		public AuthToken authToken;
+    public class App : Application
+    {
+        public MainPage RootPage;
+        public Site MainSite;
+        public Site CurrentSite;
+        public Group CurrentGroup;
+        public AuthToken AuthToken;
 
-		public WebService webService;
-		public IPushService pushService;
-		public ISSOService ssoService;
-		public LoginService loginService;
+        public WebService WebService;
+        public IPushService PushService;
+        public ISSOService SsoService;
+        public LoginService LoginService;
 
-		private bool isRefreshingToken = false;
+        private bool _isRefreshingToken;
 
-		public App ()
-		{
-			mainSite = new Site ();
-			mainSite.name = "Pleio hoofdniveau";
-			mainSite.url = Constants.Url;
-			currentSite = mainSite;
+        public App()
+        {
+            MainSite = new Site
+            {
+                name = "Pleio hoofdniveau",
+                url = Constants.Url
+            };
+            CurrentSite = MainSite;
 
-			webService = new WebService ();
-			loginService = new LoginService ();
+            RegisterServices();
 
-			pushService = DependencyService.Get<IPushService> ();
-			ssoService = DependencyService.Get<ISSOService> ();
+            RootPage = new MainPage();
+            MainPage = RootPage;
 
-			RootPage = new MainPage ();
-			MainPage = RootPage;
+            LoadAccessToken();
+            PushService.SetBadgeNumber(0);
 
-			LoadAccessToken ();
-			pushService.SetBadgeNumber (0);
+            SubscribeToMessages();
+        }
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "refresh_access_token", async(sender) => {
-				await RefreshToken();
-			});
-				
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login", async(sender) => {
-				ShowLogin();
-			});
+        private void RegisterServices()
+        {
+            WebService = new WebService();
+            LoginService = new LoginService();
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
-				RefreshPushToken();
-			});
-		}
-			
-		private void LoadAccessToken()
-		{
-			var token = DependencyService.Get<ITokenStore> ().getToken();
+            PushService = DependencyService.Get<IPushService>();
+            SsoService = DependencyService.Get<ISSOService>();
+        }
 
-			if (token != null) {
-				authToken = token;
-				RefreshPushToken ();
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
-			} else {
-				ShowLogin ();
-			}
-		}
+        private void SubscribeToMessages()
+        {
+            MessagingCenter.Subscribe<Application>(Current, "refresh_access_token",
+                async (sender) => { await RefreshToken(); });
 
-		private void RefreshPushToken()
-		{
+            MessagingCenter.Subscribe<Application>(Current, "login", (sender) => { ShowLogin(); });
 
-			Device.BeginInvokeOnMainThread(async () => 
-				{
-                if (pushService.GetToken() == null)
+            MessagingCenter.Subscribe<Application>(Current, "login_succesful", (sender) => { RefreshPushToken(); });
+        }
+
+        private void LoadAccessToken()
+        {
+            var token = DependencyService.Get<ITokenStore>().getToken();
+
+            if (token != null)
+            {
+                AuthToken = token;
+                RefreshPushToken();
+                MessagingCenter.Send(Current, "refresh_menu");
+            }
+            else
+            {
+                ShowLogin();
+            }
+        }
+
+        private async void RefreshPushToken()
+        {
+
+            await Task.Run(() =>
+            {
+                try
                 {
-                    pushService.RequestToken();
-                }
-                else {
-                    //android will register through an intentservice
-                    if (Device.OS == TargetPlatform.Android)
-                        return;
+                    if (PushService.GetToken() == null)
+                    {
+                        PushService.RequestToken();
+                    }
+                    else
+                    {
+                        //android will register through an intentservice
+                        if (Device.OS == TargetPlatform.Android)
+                            return;
 
-                    //iOS and other platforms registration
-                    pushService.RegisterToken();
+                        //iOS and other platforms registration
+                        PushService.RegisterToken();
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine("Catched exception " + e);
+                    Xamarin.Insights.Report(e);
                 }
             });
-		}
 
-		private async void ShowLogin()
+
+
+        }
+
+        private async void ShowLogin()
 		{
 			await RootPage.Navigation.PushModalAsync (new LoginPage ());
 		}
 
 		public async Task<bool> RefreshToken()
 		{
-			if (isRefreshingToken) {
+			if (_isRefreshingToken) {
 				return true;
 			} else {
-				isRefreshingToken = true;
+				_isRefreshingToken = true;
 			}
 
 			var store = DependencyService.Get<ITokenStore> ();
-			var new_token = await loginService.RefreshToken (store.getToken());
-			isRefreshingToken = false;
+			var newToken = await LoginService.RefreshToken (store.getToken());
+			_isRefreshingToken = false;
 
-			if (new_token != null) {
-				authToken = new_token;
-				currentSite = mainSite;
-				webService = new WebService ();
-
-				store.saveToken (new_token);
-
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
-				return true;
+			if (newToken != null)
+			{
+			    UpdateToken(newToken, store);
+			    return true;
 			} else {
 				ShowLogin ();
 				return false;
 			}
 		}
-			
-		protected override void OnSleep ()
+
+        private void UpdateToken(AuthToken newToken, ITokenStore store)
+        {
+            AuthToken = newToken;
+            CurrentSite = MainSite;
+            WebService = new WebService();
+
+            store.saveToken(newToken);
+
+            MessagingCenter.Send(Current, "login_succesful");
+            MessagingCenter.Send(Current, "refresh_menu");
+        }
+
+        protected override void OnSleep ()
 		{
 			// Handle when your app sleeps
 		}
 
 		protected override void OnResume ()
 		{
-			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
-			pushService.SetBadgeNumber (0);
+			MessagingCenter.Send (Current, "refresh_menu");
+			PushService.SetBadgeNumber (0);
 		}
 	}
 }

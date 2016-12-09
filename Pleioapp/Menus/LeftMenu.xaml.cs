@@ -22,26 +22,26 @@ namespace Pleioapp
 			InitializeComponent ();
 
 			Menu = GroupsListView;
-			BindingContext = app.currentSite;
+			BindingContext = app.CurrentSite;
 
 			GroupsListView.ItemsSource = Groups;
 			SitesListView.ItemsSource = Sites;
-			Sites.Add (app.mainSite);
+			Sites.Add (app.MainSite);
 
 			SiteName.GestureRecognizers.Add (new TapGestureRecognizer {
 				Command = new Command(() => ToggleSubsiteMenu())
 			});
 					
 			SitesListView.ItemSelected += async(sender, e) => {
-				app.currentSite = e.SelectedItem as Site;
-				BindingContext = app.currentSite;
+				app.CurrentSite = e.SelectedItem as Site;
+				BindingContext = app.CurrentSite;
 				Groups.Clear();
 				ToggleSubsiteMenu ();
 				await GetGroups ();
 			};
 
 			Menu.ItemSelected += (sender, e) =>  {
-				app.currentGroup = e.SelectedItem as Group;
+				app.CurrentGroup = e.SelectedItem as Group;
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "select_group");
 			};
 
@@ -77,11 +77,11 @@ namespace Pleioapp
 		public async void OnLogout() {
 			MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "logout");
 
-			app.pushService.DeregisterToken ();	
+			app.PushService.DeregisterToken ();	
 
-			app.currentSite = null;
-			app.currentGroup = null;
-			app.authToken = null;
+			app.CurrentSite = null;
+			app.CurrentGroup = null;
+			app.AuthToken = null;
 
 			var store = DependencyService.Get<ITokenStore> ();
 			store.clearTokens ();
@@ -92,7 +92,7 @@ namespace Pleioapp
 		}
 
 		public async Task GetGroups() {
-			if (app.currentSite == null) {
+			if (app.CurrentSite == null) {
 				Groups.Clear ();
 				return;
 			}
@@ -101,7 +101,7 @@ namespace Pleioapp
 			ActivityIndicator.IsVisible = true;
 
 			try {
-				var GroupsAtService = await app.webService.GetGroups ();
+				var GroupsAtService = await app.WebService.GetGroups ();
 
 				foreach (Group group in GroupsAtService) {
 					if (!Groups.Contains(group)) {
@@ -127,7 +127,7 @@ namespace Pleioapp
 
 		public async Task GetSites() {
 			try {
-				var SitesAtService = await app.webService.GetSites ();
+				var SitesAtService = await app.WebService.GetSites ();
 
 				foreach (Site site in SitesAtService) {
 					if (!Sites.Contains(site)) {
@@ -138,7 +138,7 @@ namespace Pleioapp
 				}
 
 				foreach (Site site in Sites) {
-					if (!SitesAtService.Contains(site) && site != app.mainSite) {
+					if (!SitesAtService.Contains(site) && site != app.MainSite) {
 						Sites.Remove(site);
 					}
 				}

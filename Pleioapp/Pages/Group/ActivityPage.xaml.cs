@@ -19,7 +19,7 @@ namespace Pleioapp
 			ActivityListView.ItemSelected += (sender, e) => {
 				var activity = e.SelectedItem as Activity;
 				if (activity.targetObject.url != null) {
-					app.ssoService.OpenUrl(activity.targetObject.url);
+					app.SsoService.OpenUrl(activity.targetObject.url);
 				}
 			};
 
@@ -32,7 +32,7 @@ namespace Pleioapp
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
 				var app = (App)App.Current;
-				setGroup(app.currentGroup);
+				setGroup(app.CurrentGroup);
 			});
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "logout", async(sender) => {
@@ -48,7 +48,7 @@ namespace Pleioapp
 			ActivityIndicator.IsVisible = true;
 
 			try {
-				var service = app.webService;
+				var service = app.WebService;
 				var webActivities = await service.GetActivities (Group);
 				foreach (Activity activity in webActivities) {
 					activities.Add (activity);
@@ -78,10 +78,10 @@ namespace Pleioapp
 			Reload ();
 
 			if (group.activitiesUnreadCount > 0) {
-				app.currentGroup.MarkAsRead ();
-				app.currentSite.groupsUnreadCount -= 1;
+				app.CurrentGroup.MarkAsRead ();
+				app.CurrentSite.groupsUnreadCount -= 1;
 
-				var service = app.webService;
+				var service = app.WebService;
 				await service.MarkGroupAsRead (Group);
 			}
 		}

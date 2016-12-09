@@ -36,7 +36,7 @@ namespace Pleioapp
 
 	    private void GroupChangedCallback(Application application)
 	    {
-	        SetGroup(_app.currentGroup);
+	        SetGroup(_app.CurrentGroup);
 
 	    }
 
@@ -61,7 +61,7 @@ namespace Pleioapp
 	        {
 	            if (selectedEvent.url != null)
 	            {
-	                _app.ssoService.OpenUrl(selectedEvent.url);
+	                _app.SsoService.OpenUrl(selectedEvent.url);
 	            }
 	        }
 	        ((ListView) sender).SelectedItem = null;
@@ -79,7 +79,7 @@ namespace Pleioapp
 			_files.Clear();
 
 			
-			var service = _app.webService;
+			var service = _app.WebService;
 
 			try
 			{

@@ -40,7 +40,7 @@ namespace Pleioapp.iOS
 		public Task<bool> RegisterToken()
 		{
 			var app = (App)App.Current;
-			var service = app.webService;
+			var service = app.WebService;
 			var deviceId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.AsString ();
 			return service.RegisterPush (deviceId, GetToken (), "apns");
 		}
@@ -48,7 +48,7 @@ namespace Pleioapp.iOS
 		public Task<bool> DeregisterToken()
 		{
 			var app = (App)App.Current;
-			var service = app.webService;
+			var service = app.WebService;
 			var deviceId = UIKit.UIDevice.CurrentDevice.IdentifierForVendor.AsString ();
 			return service.DeregisterPush (deviceId, "apns");
 		}

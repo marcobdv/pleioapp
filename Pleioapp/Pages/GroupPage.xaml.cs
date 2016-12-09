@@ -28,7 +28,7 @@ namespace Pleioapp
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
 				var app = (App)App.Current;
-				BindingContext = app.currentGroup;
+				BindingContext = app.CurrentGroup;
 			});
 		}
 	}

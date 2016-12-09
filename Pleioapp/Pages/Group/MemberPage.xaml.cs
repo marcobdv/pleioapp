@@ -20,7 +20,7 @@ namespace Pleioapp
 			MemberListView.ItemSelected += (sender, e) => {
 				var member = e.SelectedItem as User;
 				if (member.url != null) {
-					app.ssoService.OpenUrl(member.url);
+					app.SsoService.OpenUrl(member.url);
 				}
 			};
 				
@@ -33,7 +33,7 @@ namespace Pleioapp
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
 				var app = (App)App.Current;
-				setGroup(app.currentGroup);
+				setGroup(app.CurrentGroup);
 			});
 		}
 
@@ -44,7 +44,7 @@ namespace Pleioapp
 			members.Clear ();
 
 			var app = (App)App.Current;
-			var service = app.webService;
+			var service = app.WebService;
 
 			try {
 				var webMembers = await service.GetMembers (Group);

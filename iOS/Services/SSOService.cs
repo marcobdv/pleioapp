@@ -18,7 +18,7 @@ namespace Pleioapp.iOS
 
 		public SSOService() {
 			App = (App) App.Current;
-			WebService = App.webService;
+			WebService = App.WebService;
 
 			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "login_succesful", async(sender) => {
 				LoadToken();
@@ -66,7 +66,7 @@ namespace Pleioapp.iOS
 			}
 
 			if (LoginToken != null) {
-				loadUrl = App.currentSite.url + "api/users/me/login_token?user_guid=" + LoginToken.userGuid + "&token=" + LoginToken.token + "&redirect_url=" + Url;
+				loadUrl = App.CurrentSite.url + "api/users/me/login_token?user_guid=" + LoginToken.userGuid + "&token=" + LoginToken.token + "&redirect_url=" + Url;
 				LoginToken = null;
 
 				LoginExpiry = UnixTimestamp () + 60 * 60;

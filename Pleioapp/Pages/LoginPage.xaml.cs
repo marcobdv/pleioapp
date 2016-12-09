@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-
 using Xamarin.Forms;
-using System.Globalization;
-using System.Collections;
 
 namespace Pleioapp
 {
@@ -41,9 +37,9 @@ namespace Pleioapp
 
 				store.saveToken (token);
 
-				app.authToken = token;
-				app.currentSite = app.mainSite;
-				app.webService = new WebService ();
+				app.AuthToken = token;
+				app.CurrentSite = app.MainSite;
+				app.WebService = new WebService ();
 
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
 				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
