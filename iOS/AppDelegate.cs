@@ -58,7 +58,7 @@ namespace Pleioapp.iOS
 			var data = new Dictionary<string, string> ();
 
 			var app = (App) App.Current;
-			app.pushService.ProcessPushNotification(data);
+			app.PushService.ProcessPushNotification(data);
 		}
 	}
 }

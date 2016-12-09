@@ -17,6 +17,7 @@ namespace Pleioapp
         {
             _parentFolder = parentFolder;
             _group = group;
+            Title = parentFolder.title;
             Reload();
         }
 
