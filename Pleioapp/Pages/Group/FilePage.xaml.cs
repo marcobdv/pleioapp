@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Xamarin.Forms;
 
@@ -7,59 +6,91 @@ namespace Pleioapp
 {
 	public partial class FilePage : ContentPage
 	{
-		ObservableCollection<FSObject> files = new ObservableCollection<FSObject>();
-		App app = (App)App.Current;
-		Group Group;
+	    private readonly App _app = (App)Application.Current;
+	    private readonly ObservableCollection<FSObject> _files = new ObservableCollection<FSObject>();
+	    private readonly FSObject _parentFolder;
+	    private Group _group;
 
-		public FilePage()
+	    /*The root of each tab in your TabbedPage should be a single NavigationPage, which wraps a ContentPage. From that ContentPage you navigate to other pages by using the Navigation property of the page.*/
+
+	    public FilePage(Group group, FSObject parentFolder):this()
+        {
+            _parentFolder = parentFolder;
+            _group = group;
+            Reload();
+        }
+
+	    public FilePage()
 		{
 			InitializeComponent();
-			FileListView.ItemsSource = files;
+			FileListView.ItemsSource = _files;
 
-			FileListView.ItemSelected += (sender, e) =>
-			{
-				var selectedEvent = e.SelectedItem as FSObject;
-				if (selectedEvent.url != null)
-				{
-					app.ssoService.OpenUrl(selectedEvent.url);
-				}
-			};
+		    FileListView.ItemSelected += FileListViewOnItemSelected;
 
-			CouldNotLoad.GestureRecognizers.Add(new TapGestureRecognizer
-			{
-				Command = new Command(() =>
-				{
-					Reload();
-				}),
-				NumberOfTapsRequired = 1
-			});
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application>(App.Current, "select_group", async (sender) =>
-			{
-				var app = (App)App.Current;
-				setGroup(app.currentGroup);
-			});
+
+			CouldNotLoad.GestureRecognizers.Add(CreateReloadGesture());
+
+			MessagingCenter.Subscribe<Application>(Application.Current, "select_group",GroupChangedCallback);
 		}
 
-		public async void Reload()
+	    private void GroupChangedCallback(Application application)
+	    {
+	        SetGroup(_app.currentGroup);
+
+	    }
+
+	    private TapGestureRecognizer CreateReloadGesture()
+	    {
+	        return new TapGestureRecognizer
+	        {
+	            Command = new Command(Reload),
+	            NumberOfTapsRequired = 1
+	        };
+	    }
+
+	    private void FileListViewOnItemSelected(object sender, SelectedItemChangedEventArgs e)
+	    {
+            var selectedEvent = e.SelectedItem as FSObject;
+	        if (selectedEvent == null) return;
+	        if (IsFolder(selectedEvent))
+	        {
+	            Navigation.PushAsync(new FilePage(_group, selectedEvent));
+	        }
+	        else
+	        {
+	            if (selectedEvent.url != null)
+	            {
+	                _app.ssoService.OpenUrl(selectedEvent.url);
+	            }
+	        }
+	        ((ListView) sender).SelectedItem = null;
+	    }
+
+	    private static bool IsFolder(FSObject selectedEvent)
+	    {
+	        return selectedEvent.subtype.Equals("folder", StringComparison.OrdinalIgnoreCase);
+	    }
+
+	    public async void Reload()
 		{
 			CouldNotLoad.IsVisible = false;
 			NoItems.IsVisible = false;
-			files.Clear();
+			_files.Clear();
 
-			var app = (App)App.Current;
-			var service = app.webService;
+			
+			var service = _app.webService;
 
 			try
 			{
-				var webFiles = await service.GetFiles(Group);
+				var webFiles = await service.GetFiles(_group,_parentFolder);
 
-				foreach (FSObject e in webFiles)
+				foreach (var e in webFiles)
 				{
-					files.Add(e);
+					_files.Add(e);
 				}
 
-				if (files.Count == 0)
+				if (_files.Count == 0)
 				{
 					NoItems.IsVisible = true;
 				}
@@ -71,12 +102,12 @@ namespace Pleioapp
 			}
 		}
 
-		public async void setGroup(Group group)
+	    public async void SetGroup(Group group)
 		{
-			Group = group;
+			_group = group;
 			if (group == null)
 			{
-				files.Clear();
+				_files.Clear();
 				return;
 			}
 

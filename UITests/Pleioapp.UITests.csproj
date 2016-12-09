@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -37,12 +37,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\iOS\Pleioapp.iOS.csproj">
-      <Project>{0051A695-1A2C-4D3A-888C-EBFAF567E421}</Project>
-      <Name>Pleioapp.iOS</Name>
-      <ReferenceOutputAssembly>False</ReferenceOutputAssembly>
-      <Private>False</Private>
-    </ProjectReference>
     <ProjectReference Include="..\Droid\Pleioapp.Droid.csproj">
       <Project>{583A438C-C7DB-41E0-AF78-6D374A81425D}</Project>
       <Name>Pleioapp.Droid</Name>
