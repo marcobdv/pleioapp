@@ -9,7 +9,7 @@ namespace Pleioapp
 	public partial class LeftMenu : ContentPage
 	{
 	    private readonly ObservableCollection<Site> _sites = new ObservableCollection<Site> ();
-		public ObservableCollection<Group> Groups = new ObservableCollection<Group>();
+		public readonly ObservableCollection<Group> Groups = new ObservableCollection<Group>();
 		public Site CurrentSite;
 
 	    private readonly App _app = (App) Application.Current;

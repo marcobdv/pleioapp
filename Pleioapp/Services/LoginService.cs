@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Net.Http;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using Xamarin.Forms;
 
@@ -10,16 +9,18 @@ namespace Pleioapp
 {
 	public class LoginService
 	{
-		private HttpClient client;
+	    private readonly HttpClient _client;
 
-		public LoginService () 
+		public LoginService ()
 		{
-			client = new HttpClient ();
+		    _client = new HttpClient ();
 		}
 
 		public async Task<AuthToken> Login (string username, string password)
 		{
-			var uri = new Uri (Constants.Url + "oauth/v2/token");
+		    App app = (App) App.Current;
+
+            var uri = new Uri (app.MainSite.url + "oauth/v2/token");
 			var formContent = new FormUrlEncodedContent (new [] {
 				new KeyValuePair<string,string>("client_id", Constants.ClientId),
 				new KeyValuePair<string,string>("client_secret", Constants.ClientSecret),
@@ -28,7 +29,7 @@ namespace Pleioapp
 				new KeyValuePair<string,string>("password", password),
 			});
 
-			var response = await client.PostAsync (uri, formContent);
+			var response = await _client.PostAsync (uri, formContent);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -42,7 +43,12 @@ namespace Pleioapp
 
 		public async Task<AuthToken> RefreshToken(AuthToken currentToken)
 		{
-			var uri = new Uri (Constants.Url + "oauth/v2/token");
+		    App app = (App) App.Current;
+		    if (currentToken.mainSiteName != null && currentToken.mainSiteUrl != null)
+		    {
+		        app.SwitchMainSite(currentToken.mainSiteName);
+		    }
+			var uri = new Uri (app.MainSite.url + "oauth/v2/token");
 			var formContent = new FormUrlEncodedContent (new [] {
 				new KeyValuePair<string,string>("client_id", Constants.ClientId),
 				new KeyValuePair<string,string>("client_secret", Constants.ClientSecret),
@@ -50,7 +56,7 @@ namespace Pleioapp
 				new KeyValuePair<string,string>("refresh_token", currentToken.refreshToken),
 			});
 
-			var response = await client.PostAsync (uri, formContent);
+			var response = await _client.PostAsync (uri, formContent);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {

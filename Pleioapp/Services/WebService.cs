@@ -37,7 +37,26 @@ namespace Pleioapp
 			return _client;
 		}
 
-	    public async Task<List<Site>> GetSites()
+	    public async Task<List<Site>> GetMainSites()
+		{
+			/*var uri = new Uri (Constants.RootUrl + "api/subsites");
+
+			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of of main sites...");
+			var response = await GetClient().GetAsync (uri);
+			var content = await response.Content.ReadAsStringAsync ();
+
+			if (response.IsSuccessStatusCode) {
+				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of main sites");
+				System.Diagnostics.Debug.WriteLine (content);
+
+				var list = JsonConvert.DeserializeObject <PaginatedList<Site>> (content);
+				return list.entities;
+			}*/
+
+		    return new List<Site>(Constants.DefaultSubSites);
+		}
+
+        public async Task<List<Site>> GetSites()
 		{
 			var uri = new Uri (currentSite.url + "api/sites/mine");
 

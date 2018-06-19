@@ -5,7 +5,7 @@ namespace Pleioapp
 {
 	public class AuthToken
 	{
-		[JsonProperty(PropertyName="access_token")]
+	    [JsonProperty(PropertyName="access_token")]
 		public string accessToken { get; set; }
 		[JsonProperty(PropertyName="expires_in")]
 		public string expiresIn { get; set; }
@@ -15,6 +15,10 @@ namespace Pleioapp
 		public string refreshToken { get; set; }
 		[JsonProperty(PropertyName="scope")]
 		public string scope { get; set; }
+	    [JsonIgnore]
+	    public string mainSiteName { get; set; }
+	    [JsonIgnore]
+        public string mainSiteUrl { get; set; }
 	}
 }
 

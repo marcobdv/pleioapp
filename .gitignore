@@ -41,3 +41,8 @@ Thumbs.db
 
 # do not commit configuration
 Pleioapp/Constants.cs
+/.vs/Pleioapp/DesignTimeBuild/.dtbcache
+/.vs/Pleioapp/v15/Server/sqlite3/storage.ide-wal
+/.vs/Pleioapp/v15/Server/sqlite3/storage.ide-shm
+/.vs/Pleioapp/v15/Server/sqlite3/storage.ide
+/.vs/Pleioapp/v15/Server/sqlite3/db.lock

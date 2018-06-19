@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Pleioapp
@@ -23,7 +24,12 @@ namespace Pleioapp
 				}),
 				NumberOfTapsRequired = 1
 			});
+		    var app = (App) Application.Current;
 
+            foreach (var site in app.AvailbleSites)
+		    {
+		        SiteSelection.Items.Add(site.name);
+		    }
 		}
 
 		async void OnLogin(object sender, EventArgs e)
@@ -34,7 +40,8 @@ namespace Pleioapp
 			if (token != null) {
 				var store = DependencyService.Get<ITokenStore> ();
 				var app = (App) App.Current;
-
+			    token.mainSiteName = app.MainSite.name;
+			    token.mainSiteUrl = app.MainSite.url;
 				store.saveToken (token);
 
 				app.AuthToken = token;
@@ -49,6 +56,14 @@ namespace Pleioapp
 				await DisplayAlert ("Login", "Kon niet inloggen, controleer je gebruikersnaam en wachtwoord.", "Ok");
 			}
 		}
+
+	    private void SiteSelection_OnSelectedIndexChanged(object sender, EventArgs e)
+	    {
+	        var app = (App)Application.Current;
+	        app.SwitchMainSite(SiteSelection.Items[SiteSelection.SelectedIndex]);
+
+            
+	    }
 	}
 }
 

@@ -1,5 +1,6 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 using System.Threading.Tasks;
 
@@ -22,14 +23,13 @@ namespace Pleioapp
 
         public App()
         {
-            MainSite = new Site
-            {
-                name = "Pleio hoofdniveau",
-                url = Constants.Url
-            };
+            RegisterServices();
+            AvailbleSites = WebService.GetMainSites().Result;
+
+            MainSite = AvailbleSites.First();
             CurrentSite = MainSite;
 
-            RegisterServices();
+            
 
             RootPage = new MainPage();
             MainPage = RootPage;
@@ -39,6 +39,8 @@ namespace Pleioapp
 
             SubscribeToMessages();
         }
+
+        public List<Site> AvailbleSites { get; private set; }
 
         private void RegisterServices()
         {
@@ -65,7 +67,12 @@ namespace Pleioapp
 
             if (token != null)
             {
+                if (token.mainSiteName != null && token.mainSiteUrl != null)
+                {
+                    SwitchMainSite(token.mainSiteName);
+                }
                 AuthToken = token;
+
                 RefreshPushToken();
                 MessagingCenter.Send(Current, "refresh_menu");
             }
@@ -123,15 +130,20 @@ namespace Pleioapp
 
 			var store = DependencyService.Get<ITokenStore> ();
 			var newToken = await LoginService.RefreshToken (store.getToken());
-			_isRefreshingToken = false;
+		   
+			
 
 			if (newToken != null)
 			{
-			    UpdateToken(newToken, store);
-			    return true;
+			    newToken.mainSiteName = MainSite.name;
+			    newToken.mainSiteUrl = MainSite.url;
+                UpdateToken(newToken, store);
+			    _isRefreshingToken = false;
+                return true;
 			} else {
-				ShowLogin ();
-				return false;
+			    _isRefreshingToken = false;
+                ShowLogin ();
+                return false;
 			}
 		}
 
@@ -157,6 +169,15 @@ namespace Pleioapp
 			MessagingCenter.Send (Current, "refresh_menu");
 			PushService.SetBadgeNumber (0);
 		}
-	}
+
+        public void SwitchMainSite(string siteSelectionItem)
+        {
+            var selectedSite = AvailbleSites.FirstOrDefault(x => x.name.Equals(siteSelectionItem));
+            if (selectedSite != null)
+            {
+                MainSite = selectedSite;
+            }
+        }
+    }
 }
 

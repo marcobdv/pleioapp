@@ -16,7 +16,8 @@
 	            <Label.Text>Aanmelden op Pleio</Label.Text>
             </Label>
             <StackLayout Spacing="15">
-				<Entry x:Name="username" Placeholder="E-mailadres" Keyboard="Email" />
+                <Picker x:Name="SiteSelection" SelectedIndexChanged="SiteSelection_OnSelectedIndexChanged"/>
+                <Entry x:Name="username" Placeholder="E-mailadres" Keyboard="Email" />
 				<Entry x:Name="password" Placeholder="Wachtwoord" IsPassword="true" />
 				<Button x:Name="loginButton" Text="Aanmelden" Clicked="OnLogin" />
 			</StackLayout>

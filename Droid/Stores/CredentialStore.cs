@@ -26,7 +26,9 @@ namespace Pleioapp.Droid
 			if (token.tokenType != null) { newAccount.Properties.Add ("token_type", token.tokenType); }
 			if (token.scope != null) { newAccount.Properties.Add ("scope", token.scope); }
 			if (token.refreshToken != null) { newAccount.Properties.Add ("refresh_token", token.refreshToken); }
-			store.Save (newAccount, context);
+		    if (token.mainSiteUrl != null) { newAccount.Properties.Add("mainSiteUrl", token.mainSiteUrl); }
+		    if (token.mainSiteName != null) { newAccount.Properties.Add("mainSiteName", token.mainSiteName); }
+            store.Save (newAccount, context);
 		}
 
 		public AuthToken getToken() {
@@ -42,7 +44,10 @@ namespace Pleioapp.Droid
 				if (account.Properties.ContainsKey("token_type")) { token.tokenType = account.Properties ["token_type"]; }
 				if (account.Properties.ContainsKey("scope")) { token.scope = account.Properties ["scope"]; }
 				if (account.Properties.ContainsKey("refresh_token")) { token.refreshToken = account.Properties ["refresh_token"]; }
-				return token;
+			    if (account.Properties.ContainsKey("mainSiteUrl")) { token.mainSiteUrl = account.Properties["mainSiteUrl"]; }
+			    if (account.Properties.ContainsKey("mainSiteName")) { token.mainSiteName = account.Properties["mainSiteName"]; }
+
+                return token;
 			}
 		}
 
