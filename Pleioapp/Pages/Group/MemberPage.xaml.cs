@@ -64,34 +64,6 @@ namespace Pleioapp
 
 		}
 
-        public Command LoadTweetsCommand
-        {
-            get
-            {
-                return _loadTweetsCommand ?? (_loadTweetsCommand = new Command(ExecuteLoadTweetsCommand, () =>
-                {
-                    return !MemberListView.IsRefreshing;
-                }));
-            }
-        }
-
-        private async void ExecuteLoadTweetsCommand()
-        {
-            if (MemberListView.IsRefreshing)
-                return;
-
-            MemberListView.IsRefreshing = true;
-            LoadTweetsCommand.ChangeCanExecute();
-
-            //DoStuff
-            Reload();
-
-            MemberListView.IsRefreshing = false;
-            LoadTweetsCommand.ChangeCanExecute();
-        }
-
-	    
-
 	    public async void setGroup(Group group)
 		{
 			Group = group;

@@ -20,7 +20,7 @@ Tik hier om opnieuw te proberen.
 				</Label.Text>
 				</Label>
 			</ContentView>
-			<ListView x:Name="MemberListView" HasUnevenRows="true" SeparatorColor="#dbdbdb" IsPullToRefreshEnabled="True" RefreshCommand="{Binding LoadTweetsCommand}" >
+			<ListView x:Name="MemberListView" HasUnevenRows="true" SeparatorColor="#dbdbdb">
 				<ListView.ItemTemplate>
 						<DataTemplate>
 							<ViewCell>
