@@ -4,11 +4,16 @@ namespace Pleioapp
 {
 	public class Constants
 	{
-		public const string Url = "";
+		public const string RootUrl = "";
 		public const string ClientId = "";
 		public const string ClientSecret = "";
 		public const string InsightsKey = "";
 		public const string GCMSenderId = "";
+		public static readonly List<Site> DefaultSubSites = new List<Site>
+	    {
+	        new Site {name = "Main",url = "https://www.google.nl/"},
+	        new Site {name = "Second",url = "https://www.bing.com/"},
+	    };
 	}
 }
 
