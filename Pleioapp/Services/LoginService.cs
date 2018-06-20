@@ -18,7 +18,7 @@ namespace Pleioapp
 
 		public async Task<AuthToken> Login (string username, string password)
 		{
-		    App app = (App) App.Current;
+		    var app = (App) Application.Current;
 
             var uri = new Uri (app.MainSite.url + "oauth/v2/token");
 			var formContent = new FormUrlEncodedContent (new [] {
@@ -43,7 +43,7 @@ namespace Pleioapp
 
 		public async Task<AuthToken> RefreshToken(AuthToken currentToken)
 		{
-		    App app = (App) App.Current;
+		    var app = (App) Application.Current;
 		    if (currentToken.mainSiteName != null && currentToken.mainSiteUrl != null)
 		    {
 		        app.SwitchMainSite(currentToken.mainSiteName);
@@ -64,7 +64,7 @@ namespace Pleioapp
 				return JsonConvert.DeserializeObject <AuthToken> (content);
 			} else {
 				System.Diagnostics.Debug.WriteLine ("A problem occured during token refresh, triggering relogin: " + content);
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "trigger_login");
+				MessagingCenter.Send<Xamarin.Forms.Application> (Application.Current, "trigger_login");
 				return null;
 			}
 

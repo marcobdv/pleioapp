@@ -11,6 +11,7 @@ namespace Pleioapp
 	{
 	    private const string RootFolderUrlTemplate = "{0}api/groups/{1}/files?limit=100";
 	    private const string SubFolderUrlTemplate = "{0}api/groups/{1}/files?limit=100&container_guid={2}";
+	    private HttpClient _authorizedClient;
 	    private HttpClient _client;
 	    private AuthToken _token;
 
@@ -21,25 +22,36 @@ namespace Pleioapp
 			}
 		}
 
-	    private HttpClient GetClient()
+        private HttpClient GetClient()
+        {
+            if (_client == null)
+            {
+                _client = new HttpClient();
+                _client.DefaultRequestHeaders.Add("Accept", "text/json");
+            }
+
+            return _client;
+        }
+
+        private HttpClient GetAuthorizedClient()
 		{
-			if (_client == null) {
+			if (_authorizedClient == null) {
 				var app = (App)Application.Current;
 				if (app.AuthToken == null) {
 					throw new Exception ("Tried to perform a protected API call but there is no OAuth2 authentication token initialized.");
 				}
 
 				_token = app.AuthToken;
-				_client = new HttpClient ();
-				_client.DefaultRequestHeaders.Add ("Authorization", $"Bearer {_token.accessToken}");
+				_authorizedClient = new HttpClient ();
+				_authorizedClient.DefaultRequestHeaders.Add ("Authorization", $"Bearer {_token.accessToken}");
 			}
 
-			return _client;
+			return _authorizedClient;
 		}
 
 	    public async Task<List<Site>> GetMainSites()
 		{
-			/*var uri = new Uri (Constants.RootUrl + "api/subsites");
+			var uri = new Uri (Constants.RootUrl + "sites/?app_enabled=2");
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of of main sites...");
 			var response = await GetClient().GetAsync (uri);
@@ -51,7 +63,7 @@ namespace Pleioapp
 
 				var list = JsonConvert.DeserializeObject <PaginatedList<Site>> (content);
 				return list.entities;
-			}*/
+			}
 
 		    return new List<Site>(Constants.DefaultSubSites);
 		}
@@ -61,7 +73,7 @@ namespace Pleioapp
 			var uri = new Uri (currentSite.url + "api/sites/mine");
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of sites...");
-			var response = await GetClient().GetAsync (uri);
+			var response = await GetAuthorizedClient().GetAsync (uri);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -81,7 +93,7 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of groups...");
 
-			var response = await GetClient().GetAsync (uri);
+			var response = await GetAuthorizedClient().GetAsync (uri);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -107,7 +119,7 @@ namespace Pleioapp
 			try {
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Marking group as read... ");
 
-				var response = await GetClient().PostAsync(uri, null);
+				var response = await GetAuthorizedClient().PostAsync(uri, null);
 				var content = await response.Content.ReadAsStringAsync();
 
 				System.Diagnostics.Debug.WriteLine ("[Webservice] Marked group as read " + content);
@@ -129,7 +141,7 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving activities... ");
 
-			var response = await GetClient().GetAsync (uri);
+			var response = await GetAuthorizedClient().GetAsync (uri);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -151,7 +163,7 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving events... ");
 
-			var response = await GetClient().GetAsync (uri);
+			var response = await GetAuthorizedClient().GetAsync (uri);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -170,7 +182,7 @@ namespace Pleioapp
 
 			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving members... ");
 
-			var response = await GetClient().GetAsync (uri);
+			var response = await GetAuthorizedClient().GetAsync (uri);
 			var content = await response.Content.ReadAsStringAsync ();
 
 			if (response.IsSuccessStatusCode) {
@@ -188,7 +200,7 @@ namespace Pleioapp
             var uri = GetFolderUri(group, parentFolder);
             System.Diagnostics.Debug.WriteLine("[Webservice] Retrieving files... ");
 
-            var response = await GetClient().GetAsync(uri);
+            var response = await GetAuthorizedClient().GetAsync(uri);
             var content = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
@@ -226,7 +238,7 @@ namespace Pleioapp
 					new KeyValuePair<string,string>("service", service)
 				});
 
-				var response = await GetClient().PostAsync(uri, formContent);
+				var response = await GetAuthorizedClient().PostAsync(uri, formContent);
 				var content = await response.Content.ReadAsStringAsync();
 
 				if (response.IsSuccessStatusCode) {
@@ -260,7 +272,7 @@ namespace Pleioapp
 					new KeyValuePair<string,string>("service", service)
 				});
 
-				var response = await GetClient().PostAsync(uri, formContent);
+				var response = await GetAuthorizedClient().PostAsync(uri, formContent);
 				var content = await response.Content.ReadAsStringAsync();
 
 				if (response.IsSuccessStatusCode) {
@@ -280,7 +292,7 @@ namespace Pleioapp
 		{
 			try {
 				var uri = new Uri (currentSite.url + "api/users/me/generate_token");
-				var response = await GetClient ().PostAsync (uri, null);
+				var response = await GetAuthorizedClient ().PostAsync (uri, null);
 				var content = await response.Content.ReadAsStringAsync();
 
 				if (response.IsSuccessStatusCode) {
