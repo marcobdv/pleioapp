@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Xamarin.Forms;
 
 namespace Pleioapp
@@ -11,48 +10,64 @@ namespace Pleioapp
 			InitializeComponent ();
 			var browserService = DependencyService.Get<IBrowserService> ();
 
-			ForgotPassword.GestureRecognizers.Add (new TapGestureRecognizer {
-				Command = new Command (() => {
-					browserService.OpenUrl("https://www.pleio.nl/forgotpassword");
-				}),
-				NumberOfTapsRequired = 1
-			});
+			SetupForgotPasswordGesture(browserService);
 
-			RegisterAccount.GestureRecognizers.Add (new TapGestureRecognizer {
-				Command = new Command (() => {
-					browserService.OpenUrl("https://www.pleio.nl/register");
-				}),
-				NumberOfTapsRequired = 1
-			});
+			SetupAccountRegistrationGesture(browserService);
 		    var app = (App) Application.Current;
 
-            foreach (var site in app.AvailbleSites)
-		    {
-		        SiteSelection.Items.Add(site.name);
-		    }
+            LoadMainSites(app);
 		}
 
-		async void OnLogin(object sender, EventArgs e)
+	    private void SetupForgotPasswordGesture(IBrowserService browserService)
+	    {
+	        ForgotPassword.GestureRecognizers.Add(new TapGestureRecognizer
+	        {
+	            Command = new Command(() => { browserService.OpenUrl(Constants.RootUrl+"forgotpassword"); }),
+	            NumberOfTapsRequired = 1
+	        });
+	    }
+
+	    private void SetupAccountRegistrationGesture(IBrowserService browserService)
+	    {
+	        RegisterAccount.GestureRecognizers.Add(new TapGestureRecognizer
+	        {
+	            Command = new Command(() => { browserService.OpenUrl(Constants.RootUrl+"register"); }),
+	            NumberOfTapsRequired = 1
+	        });
+	    }
+
+	    private void LoadMainSites(App app)
+	    {
+	        foreach (var site in app.AvailbleSites)
+	        {
+	            SiteSelection.Items.Add(site.name);
+	        }
+	        SiteSelection.SelectedIndex = 0;
+	    }
+
+	    private async void OnLogin(object sender, EventArgs e)
 		{
 			var service = new LoginService ();
-			AuthToken token = await service.Login (username.Text, password.Text);
+			var token = await service.Login (username.Text, password.Text);
 
-			if (token != null) {
+			if (token != null)
+            {
 				var store = DependencyService.Get<ITokenStore> ();
-				var app = (App) App.Current;
+				var app = (App) Application.Current;
 			    token.mainSiteName = app.MainSite.name;
-			    token.mainSiteUrl = app.MainSite.url;
 				store.saveToken (token);
 
 				app.AuthToken = token;
 				app.CurrentSite = app.MainSite;
 				app.WebService = new WebService ();
 
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "login_succesful");
-				MessagingCenter.Send<Xamarin.Forms.Application> (App.Current, "refresh_menu");
+				MessagingCenter.Send (Application.Current, "login_succesful");
+				MessagingCenter.Send (Application.Current, "refresh_menu");
 
 				await app.MainPage.Navigation.PopModalAsync ();
-			} else {
+			}
+            else
+            {
 				await DisplayAlert ("Login", "Kon niet inloggen, controleer je gebruikersnaam en wachtwoord.", "Ok");
 			}
 		}
@@ -61,8 +76,6 @@ namespace Pleioapp
 	    {
 	        var app = (App)Application.Current;
 	        app.SwitchMainSite(SiteSelection.Items[SiteSelection.SelectedIndex]);
-
-            
 	    }
 	}
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Pleioapp
+﻿namespace Pleioapp
 {
 	public interface IBrowserService
 	{

@@ -23,21 +23,20 @@ namespace Pleioapp
 
         public App()
         {
-            RegisterServices();
-            AvailbleSites = WebService.GetMainSites().Result;
-
-            MainSite = AvailbleSites.First();
-            CurrentSite = MainSite;
-
-            
-
             RootPage = new MainPage();
             MainPage = RootPage;
-
+            RegisterServices();
+            RegisterMainSite();
             LoadAccessToken();
             PushService.SetBadgeNumber(0);
-
             SubscribeToMessages();
+        }
+
+        private void RegisterMainSite()
+        {
+            AvailbleSites = Task.Run(async () => await WebService.GetMainSites()).Result; ;
+            MainSite = AvailbleSites.First();
+            CurrentSite = MainSite;
         }
 
         public List<Site> AvailbleSites { get; private set; }
@@ -46,7 +45,6 @@ namespace Pleioapp
         {
             WebService = new WebService();
             LoginService = new LoginService();
-
             PushService = DependencyService.Get<IPushService>();
             SsoService = DependencyService.Get<ISSOService>();
         }
@@ -64,15 +62,13 @@ namespace Pleioapp
         private void LoadAccessToken()
         {
             var token = DependencyService.Get<ITokenStore>().getToken();
-
             if (token != null)
             {
-                if (token.mainSiteName != null && token.mainSiteUrl != null)
+                if (token.mainSiteName != null)
                 {
                     SwitchMainSite(token.mainSiteName);
                 }
                 AuthToken = token;
-
                 RefreshPushToken();
                 MessagingCenter.Send(Current, "refresh_menu");
             }
@@ -84,7 +80,6 @@ namespace Pleioapp
 
         private async void RefreshPushToken()
         {
-
             await Task.Run(() =>
             {
                 try
@@ -102,7 +97,6 @@ namespace Pleioapp
                         //iOS and other platforms registration
                         PushService.RegisterToken();
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -110,9 +104,6 @@ namespace Pleioapp
                     Xamarin.Insights.Report(e);
                 }
             });
-
-
-
         }
 
         private async void ShowLogin()
@@ -136,7 +127,6 @@ namespace Pleioapp
 			if (newToken != null)
 			{
 			    newToken.mainSiteName = MainSite.name;
-			    newToken.mainSiteUrl = MainSite.url;
                 UpdateToken(newToken, store);
 			    _isRefreshingToken = false;
                 return true;

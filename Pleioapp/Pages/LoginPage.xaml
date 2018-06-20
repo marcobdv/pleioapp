@@ -2,26 +2,26 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="Pleioapp.LoginPage">
 	<ContentPage.Padding>
         <OnPlatform x:TypeArguments="Thickness"
-                    iOS="20, 100, 20, 20"
-                    Android="20, 80, 20, 20"
-                    WinPhone="20, 80, 20, 20" />
+                    iOS="20, 50, 20, 20"
+                    Android="20, 30, 20, 20"
+                    WinPhone="20, 30, 20, 20" />
 	</ContentPage.Padding>
 	<ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand"
                      HorizontalOptions="FillAndExpand"
                      Orientation="Vertical"
-                     Spacing="40"
+                     Spacing="10"
                      >
             <Label HorizontalTextAlignment="Center" FontSize="Large">
 	            <Label.Text>Aanmelden op Pleio</Label.Text>
             </Label>
-            <StackLayout Spacing="15">
+            <StackLayout Spacing="10">
                 <Picker x:Name="SiteSelection" SelectedIndexChanged="SiteSelection_OnSelectedIndexChanged"/>
                 <Entry x:Name="username" Placeholder="E-mailadres" Keyboard="Email" />
 				<Entry x:Name="password" Placeholder="Wachtwoord" IsPassword="true" />
 				<Button x:Name="loginButton" Text="Aanmelden" Clicked="OnLogin" />
 			</StackLayout>
-			<StackLayout Spacing="30" Orientation="Horizontal" HorizontalOptions="Center">
+			<StackLayout Spacing="15" Orientation="Horizontal" HorizontalOptions="Fill">
 				<Label x:Name="RegisterAccount" FontSize="Small">
 					<Label.Text>Account registreren</Label.Text>
 				</Label>

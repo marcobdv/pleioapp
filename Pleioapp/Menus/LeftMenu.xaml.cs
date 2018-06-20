@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -100,12 +101,17 @@ namespace Pleioapp
 						Groups.First(g => g.guid == group.guid).activitiesUnreadCount = group.activitiesUnreadCount;
 					}
 				}
-
+                var groupsToRemove = new List<Group>();
 				foreach (Group group in Groups) {
 					if (!groupsAtService.Contains(group)) {
-						Groups.Remove(group);
+					    groupsToRemove.Add(group);
 					}
 				}
+
+			    foreach (var group in groupsToRemove)
+			    {
+			        Groups.Remove(group);
+			    }
 
 			} catch (Exception e) {
 				CouldNotLoad.IsVisible = true;
@@ -119,19 +125,18 @@ namespace Pleioapp
 			try {
 				var sitesAtService = await _app.WebService.GetSites ();
 
-				foreach (Site site in sitesAtService) {
+				foreach (var site in sitesAtService) {
 					if (!_sites.Contains(site)) {
 						_sites.Add(site);
 					} else {
 						_sites.First(s => s.guid == site.guid).groupsUnreadCount = site.groupsUnreadCount;
 					}
 				}
-
-				foreach (Site site in _sites) {
-					if (!sitesAtService.Contains(site) && site != _app.MainSite) {
-						_sites.Remove(site);
-					}
-				}
+                var sitesToRemove = _sites.Where(site => !sitesAtService.Contains(site) && site != _app.MainSite).ToList();
+			    foreach (var site in sitesToRemove)
+			    {
+			        _sites.Remove(site);
+			    }
 			} catch (Exception e) {
 				System.Diagnostics.Debug.WriteLine ("Catched exception " + e);
 			}

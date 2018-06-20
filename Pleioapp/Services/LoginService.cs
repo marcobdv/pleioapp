@@ -44,7 +44,7 @@ namespace Pleioapp
 		public async Task<AuthToken> RefreshToken(AuthToken currentToken)
 		{
 		    var app = (App) Application.Current;
-		    if (currentToken.mainSiteName != null && currentToken.mainSiteUrl != null)
+		    if (currentToken.mainSiteName != null)
 		    {
 		        app.SwitchMainSite(currentToken.mainSiteName);
 		    }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 
@@ -8,7 +7,7 @@ namespace Pleioapp
 	public partial class ActivityPage : ContentPage
 	{
 		ObservableCollection<Activity> activities = new ObservableCollection<Activity>();
-		App app = (App) App.Current;
+		App app = (App) Application.Current;
 		Group Group;
 
 		public ActivityPage ()
@@ -30,12 +29,12 @@ namespace Pleioapp
 				NumberOfTapsRequired = 1
 			});
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "select_group", async(sender) => {
-				var app = (App)App.Current;
+			MessagingCenter.Subscribe<Application> (Application.Current, "select_group", async(sender) => {
+				var app = (App)Application.Current;
 				setGroup(app.CurrentGroup);
 			});
 
-			MessagingCenter.Subscribe<Xamarin.Forms.Application> (App.Current, "logout", async(sender) => {
+			MessagingCenter.Subscribe<Application> (Application.Current, "logout", async(sender) => {
 				SelectLeft.IsVisible = true;
 			});
 		}

@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace Pleioapp
 {
-	public class Site : IEquatable<Site>, INotifyPropertyChanged
+    public class Site : IEquatable<Site>, INotifyPropertyChanged
 	{
 
 		public event PropertyChangedEventHandler PropertyChanged;

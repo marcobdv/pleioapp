@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Linq;
 using Xamarin.Forms;
 
 namespace Pleioapp
@@ -51,21 +52,24 @@ namespace Pleioapp
 
 	    public async Task<List<Site>> GetMainSites()
 		{
-			var uri = new Uri (Constants.RootUrl + "sites/?app_enabled=2");
+            var uri = new Uri(Constants.RootUrl + "sites/?app_enabled=2");
 
-			System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieving list of of main sites...");
-			var response = await GetClient().GetAsync (uri);
-			var content = await response.Content.ReadAsStringAsync ();
+            System.Diagnostics.Debug.WriteLine("[Webservice] Retrieving list of of main sites...");
+            var response = await GetClient().GetAsync(uri);
+            var content = await response.Content.ReadAsStringAsync();
 
-			if (response.IsSuccessStatusCode) {
-				System.Diagnostics.Debug.WriteLine ("[Webservice] Retrieved list of main sites");
-				System.Diagnostics.Debug.WriteLine (content);
+            if (response.IsSuccessStatusCode)
+            {
+                System.Diagnostics.Debug.WriteLine("[Webservice] Retrieved list of main sites");
+                System.Diagnostics.Debug.WriteLine(content);
+                var list = JsonConvert.DeserializeObject<SiteList>(content);
+                if (list != null && list.sites.Any())
+                {
+                    return list.sites;
+                }
+            }
 
-				var list = JsonConvert.DeserializeObject <PaginatedList<Site>> (content);
-				return list.entities;
-			}
-
-		    return new List<Site>(Constants.DefaultSubSites);
+            return new List<Site>(Constants.DefaultSubSites);
 		}
 
         public async Task<List<Site>> GetSites()

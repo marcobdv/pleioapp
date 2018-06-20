@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Pleioapp
 {
@@ -17,8 +16,6 @@ namespace Pleioapp
 		public string scope { get; set; }
 	    [JsonIgnore]
 	    public string mainSiteName { get; set; }
-	    [JsonIgnore]
-        public string mainSiteUrl { get; set; }
 	}
 }
 
